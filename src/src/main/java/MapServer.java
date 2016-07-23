@@ -260,7 +260,7 @@ public class MapServer {
             System.out.println("img name:" + q.imageName);
         }
 
-            int width = 0;
+        int width = 0;
         int height =0;
         double firstLAT = collectedImages.get(0).UL_LAT;
         double firstLON = collectedImages.get(0).UL_LON;
