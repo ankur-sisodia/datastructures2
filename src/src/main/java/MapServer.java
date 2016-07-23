@@ -57,7 +57,7 @@ public class MapServer {
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
     private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat",
-            "lrlon", "w", "h"};
+        "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
@@ -65,10 +65,12 @@ public class MapServer {
      * end_lat -> end point latitude, <br>end_lon -> end point longitude.
      **/
     private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon",
-            "end_lat", "end_lon"};
+        "end_lat", "end_lon"};
     /* Define any static variables here. Do not define any instance variables of MapServer. */
     private static GraphDB g;
     private static QuadTree qTree;
+    private static HashMap<String, BufferedImage> storedImages;
+
     /**
      * Place any initialization statements that will be run before the server main loop here.
      * Do not place it in the main function. Do not place initialization code anywhere else.
@@ -78,7 +80,7 @@ public class MapServer {
         // g = new GraphDB(OSM_DB_PATH);
         //ANKUR ADD
         qTree = new QuadTree();
-
+        storedImages = new HashMap();
     }
 
     public static void main(String[] args) {
@@ -254,32 +256,63 @@ public class MapServer {
                 inputParams.get("w"),inputParams.get("h"));
         Collections.sort(collectedImages);
 
-        int width = 0;
-        int length = 0;
-        double firstLAT = collectedImages.get(0).UL_LAT;
-        double firstLON = collectedImages.get(0).UL_LON;
-
         for (QuadTree.QuadTreeNode q: collectedImages) {
-            if (q.UL_LAT == firstLAT)
-                width++;
-            if (q.UL_LON == firstLON)
-                length++;
+            System.out.println("img name:" + q.imageName);
         }
 
+            int width = 0;
+        int height =0;
+        double firstLAT = collectedImages.get(0).UL_LAT;
+        double firstLON = collectedImages.get(0).UL_LON;
+        double lastLAT = firstLAT;
+        double lastLON = firstLON;
+        for (QuadTree.QuadTreeNode q: collectedImages) {
+            if (q.UL_LAT == firstLAT)
+                width+= TILE_SIZE;
+            if (q.UL_LON == firstLON)
+                height+= TILE_SIZE;
+            lastLAT = q.UL_LAT;
+            lastLON = q.UL_LON;
+        }
+        //double lastLAT = collectedImages.get(width*height-1).UL_LAT;
+        //double lastLON = collectedImages.get(width*height-1).UL_LON;
+        rasteredImageParams.put("raster_ul_lon", firstLON);
+        rasteredImageParams.put("raster_ul_lat", firstLAT);
+        rasteredImageParams.put("raster_lr_lon", lastLON);
+        rasteredImageParams.put("raster_lr_lat", lastLAT);
+        rasteredImageParams.put("raster_width", width);
+        rasteredImageParams.put("raster_height", height);
+        rasteredImageParams.put("query_success", true);
+        System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
+        System.out.println("raster_ul_lat: " + rasteredImageParams.get("raster_ul_lat"));
+        System.out.println("raster_lr_lon: " + rasteredImageParams.get("raster_lr_lon"));
+        System.out.println("raster_lr_lat: " + rasteredImageParams.get("raster_lr_lat"));
+        System.out.println("raster_width: " + rasteredImageParams.get("raster_width"));
+        System.out.println("raster_height: " + rasteredImageParams.get("raster_height"));
+
+
+        System.out.println("width: " + width + ", height: " + height);
         //ArrayList<String> finalImages = new ArrayList();
+        //find width and height
         int x = 0; // fix with top left tile of finalimmages
         int y = 0; // fix with top left tile of finalimages
-
-        //find width and length
-        BufferedImage result = new BufferedImage(width, length, BufferedImage.TYPE_INT_RGB);
+        BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = result.getGraphics();
 
         for (QuadTree.QuadTreeNode image : collectedImages)
         {
             BufferedImage bi = null;
             try {
-                System.out.println(new File("../src/"+IMG_ROOT + image.imageName + ".png").getCanonicalPath());
-                bi = ImageIO.read(new File("../src/"+IMG_ROOT + image.imageName + ".png"));
+                String fileName = image.imageName + ".png";
+                if (!storedImages.containsKey(fileName)) {
+                    bi = ImageIO.read(new File("img/" + image.imageName + ".png"));
+                    storedImages.put(fileName, bi);
+                } else {
+                    bi = storedImages.get(fileName);
+                }
+
+                //System.out.println("/img/" + image.imageName + ".png");
+                //bi = ImageIO.read(new File("img/" + image.imageName + ".png"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -291,7 +324,13 @@ public class MapServer {
                 y += bi.getHeight();
             }
         }
-        return null;
+        /*File outputfile = new File("saved.png");
+        try {
+            ImageIO.write(result, "png", outputfile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
+        return result;
     }
 
     /**
