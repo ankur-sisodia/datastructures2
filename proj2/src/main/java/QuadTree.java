@@ -77,7 +77,7 @@ public class QuadTree {
         protected double ulLAT, ulLON, lrLAT, lrLON;
         protected String imageName;
 
-        public QuadTreeNode (double ulLAT, double ulLON, double lrLAT, double lrLON) {
+        public QuadTreeNode(double ulLAT, double ulLON, double lrLAT, double lrLON) {
             imageName = "root";
             this.ulLAT = ulLAT; // a
             this.ulLON = ulLON; // b
@@ -85,7 +85,7 @@ public class QuadTree {
             this.lrLON = lrLON; // d
         }
 
-        public QuadTreeNode (String imageName, double ulLAT, double ulLON,
+        public QuadTreeNode(String imageName, double ulLAT, double ulLON,
                              double lrLAT, double lrLON) {
             this.imageName = imageName;
             this.ulLAT = ulLAT; // a
@@ -96,7 +96,7 @@ public class QuadTree {
             if (this.getLevel() < 7) {
                 upperLeft = new QuadTreeNode(imageName + "1", ulLAT, ulLON,
                         (ulLAT + lrLAT) / 2, (ulLON + lrLON) / 2);
-                upperRight = new QuadTreeNode(imageName + "2", ulLAT, (ulLON + lrLON)/2,
+                upperRight = new QuadTreeNode(imageName + "2", ulLAT, (ulLON + lrLON) / 2,
                         (ulLAT + lrLAT) / 2, lrLON);
                 lowerLeft = new QuadTreeNode(imageName + "3", (ulLAT + lrLAT)/2, ulLON,
                         lrLAT, (ulLON + lrLON) / 2);
