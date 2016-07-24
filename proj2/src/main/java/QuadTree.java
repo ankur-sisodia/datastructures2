@@ -37,29 +37,25 @@ public class QuadTree {
     }
 
     public ArrayList<QuadTreeNode> traverseHelper(ArrayList<QuadTreeNode> arr, QuadTreeNode node, double ullat, double ullon, double lrlat, double lrlon) {
-
-        //System.out.println("level: " + node.getLevel() + " depth: " + depth);
         if (node.getLevel() >= depth) {
-            //System.out.println("node:" + node.imageName);
             arr.add(node);
         } else {
             if (node.upperLeft.intersect(ullat, ullon, lrlat, lrlon)) {
-                //traverseHelper(arr, node.upperLeft, node.upperLeft.ulLAT, node.upperLeft.ulLON);
                 traverseHelper(arr, node.upperLeft, ullat, ullon, lrlat, lrlon);
             }
+
             if (node.upperRight.intersect(ullat, ullon, lrlat, lrlon)) {
                 traverseHelper(arr, node.upperRight, ullat, ullon, lrlat, lrlon);
             }
+
             if (node.lowerLeft.intersect(ullat, ullon, lrlat, lrlon)) {
                 traverseHelper(arr, node.lowerLeft, ullat, ullon, lrlat, lrlon);
             }
+
             if (node.lowerRight.intersect(ullat, ullon, lrlat, lrlon)) {
-
                 traverseHelper(arr, node.lowerRight, ullat, ullon, lrlat, lrlon);
-
             }
         }
-        //System.out.println("size: " + arr.size());
         return arr;
     }
 
@@ -117,12 +113,15 @@ public class QuadTree {
             if(this.lrLON < userULLON) {
                 return false;
             }
+
             if(this.ulLON > userLRLON) {
                 return false;
             }
+
             if(this.lrLAT > userULLAT) {
                 return false;
             }
+
             if(this.ulLAT < userLRLAT) {
                 return false;
             }

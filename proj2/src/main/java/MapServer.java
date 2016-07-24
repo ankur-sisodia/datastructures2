@@ -55,8 +55,8 @@ public class MapServer {
      * lrlat -> lower right corner latitude,<br> lrlon -> lower right corner longitude <br>
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
-    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat",
-            "lrlon", "w", "h"};
+    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon",
+            "lrlat", "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
@@ -256,20 +256,20 @@ public class MapServer {
         Collections.sort(collectedImages);
 
         for (QuadTree.QuadTreeNode q: collectedImages) {
-          //  System.out.println("img name:" + q.imageName);
+            //  System.out.println("img name:" + q.imageName);
         }
 
         int width = 0;
-        int height =0;
+        int height = 0;
         double firstLAT = collectedImages.get(0).ulLAT;
         double firstLON = collectedImages.get(0).ulLON;
         double lastLAT = firstLAT;
         double lastLON = firstLON;
         for (QuadTree.QuadTreeNode q: collectedImages) {
             if (q.ulLAT == firstLAT)
-                width+= TILE_SIZE;
+                width += TILE_SIZE;
             if (q.ulLON == firstLON)
-                height+= TILE_SIZE;
+                height += TILE_SIZE;
             lastLAT = q.lrLAT;
             lastLON = q.lrLON;
         }
@@ -283,7 +283,7 @@ public class MapServer {
         rasteredImageParams.put("raster_height", height);
         rasteredImageParams.put("depth", qTree.getDepth());
         rasteredImageParams.put("query_success", true);
-      //  System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
+        //  System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
         //System.out.println("raster_ul_lat: " + rasteredImageParams.get("raster_ul_lat"));
         //System.out.println("raster_lr_lon: " + rasteredImageParams.get("raster_lr_lon"));
         //System.out.println("raster_lr_lat: " + rasteredImageParams.get("raster_lr_lat"));
@@ -320,7 +320,7 @@ public class MapServer {
             if (x >= result.getWidth())
             {
                 x = 0;
-               // y += TILE_SIZE;
+                // y += TILE_SIZE;
                 y += bi.getHeight();
             }
         }
