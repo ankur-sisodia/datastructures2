@@ -72,7 +72,6 @@ public class AGMapServerTestPart1 {
     }
 
     private void checkParamsMap(String err, Map<String, Object> m1, Map<String, Object> m2) {
-        System.out.println(err);
         for (String key : m1.keySet()) {
             assertTrue(m2.containsKey(key));
             Object o1 = m1.get(key);
