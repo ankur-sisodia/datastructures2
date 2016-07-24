@@ -98,7 +98,7 @@ public class QuadTree {
                         (ulLAT + lrLAT) / 2, (ulLON + lrLON) / 2);
                 upperRight = new QuadTreeNode(imageName + "2", ulLAT, (ulLON + lrLON) / 2,
                         (ulLAT + lrLAT) / 2, lrLON);
-                lowerLeft = new QuadTreeNode(imageName + "3", (ulLAT + lrLAT)/2, ulLON,
+                lowerLeft = new QuadTreeNode(imageName + "3", (ulLAT + lrLAT) / 2, ulLON,
                         lrLAT, (ulLON + lrLON) / 2);
                 lowerRight = new QuadTreeNode(imageName + "4", (ulLAT + lrLAT) / 2,
                         (ulLON + lrLON) / 2, lrLAT, lrLON);
