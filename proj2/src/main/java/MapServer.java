@@ -252,7 +252,7 @@ public class MapServer {
         ArrayList<QuadTree.QuadTreeNode> collectedImages = new ArrayList();
         collectedImages = qTree.traverseTree(inputParams.get("ullat"), inputParams.get("ullon"),
                 inputParams.get("lrlat"), inputParams.get("lrlon"),
-                inputParams.get("w"),inputParams.get("h"));
+                inputParams.get("w"), inputParams.get("h"));
         Collections.sort(collectedImages);
 
         for (QuadTree.QuadTreeNode q: collectedImages) {
@@ -266,10 +266,12 @@ public class MapServer {
         double lastLAT = firstLAT;
         double lastLON = firstLON;
         for (QuadTree.QuadTreeNode q: collectedImages) {
-            if (q.ulLAT == firstLAT)
+            if (q.ulLAT == firstLAT) {
                 width += TILE_SIZE;
-            if (q.ulLON == firstLON)
+            }
+            if (q.ulLON == firstLON) {
                 height += TILE_SIZE;
+            }
             lastLAT = q.lrLAT;
             lastLON = q.lrLON;
         }
