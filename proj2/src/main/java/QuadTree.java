@@ -27,16 +27,20 @@ public class QuadTree {
 
     public int calcMaxDepth(double ullon, double lrlon, double w) {
         depth = 0;
-        double queryBoxDPP = Math.abs(lrlon - ullon)/w;
-        double tileDPP = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON) / MapServer.TILE_SIZE;
+        double queryBoxDPP = Math.abs(lrlon - ullon) / w;
+        double tileDPP = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON)
+                / MapServer.TILE_SIZE;
         while (depth <= 6 && tileDPP > queryBoxDPP) {
             depth++;
-            tileDPP /=2;
+            tileDPP /= 2;
         }
         return depth;
     }
 
-    public ArrayList<QuadTreeNode> traverseHelper(ArrayList<QuadTreeNode> arr, QuadTreeNode node, double ullat, double ullon, double lrlat, double lrlon) {
+    public ArrayList<QuadTreeNode> traverseHelper(ArrayList<QuadTreeNode> arr,
+                                                  QuadTreeNode node, double ullat,
+                                                  double ullon, double lrlat,
+                                                  double lrlon) {
         if (node.getLevel() >= depth) {
             arr.add(node);
         } else {
@@ -81,7 +85,8 @@ public class QuadTree {
             this.lrLON = lrLON; // d
         }
 
-        public QuadTreeNode (String imageName, double ulLAT, double ulLON, double lrLAT, double lrLON) {
+        public QuadTreeNode (String imageName, double ulLAT, double ulLON,
+                             double lrLAT, double lrLON) {
             this.imageName = imageName;
             this.ulLAT = ulLAT; // a
             this.ulLON = ulLON; // b
@@ -110,19 +115,19 @@ public class QuadTree {
 
         public boolean intersect(double userULLAT, double userULLON, double userLRLAT,
                                  double userLRLON) {
-            if(this.lrLON < userULLON) {
+            if (this.lrLON < userULLON) {
                 return false;
             }
 
-            if(this.ulLON > userLRLON) {
+            if (this.ulLON > userLRLON) {
                 return false;
             }
 
-            if(this.lrLAT > userULLAT) {
+            if (this.lrLAT > userULLAT) {
                 return false;
             }
 
-            if(this.ulLAT < userLRLAT) {
+            if (this.ulLAT < userLRLAT) {
                 return false;
             }
 
