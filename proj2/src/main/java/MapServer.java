@@ -56,7 +56,7 @@ public class MapServer {
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
     private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon",
-                                                                    "lrlat", "lrlon", "w", "h"};
+            "lrlat", "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
@@ -64,7 +64,7 @@ public class MapServer {
      * end_lat -> end point latitude, <br>end_lon -> end point longitude.
      **/
     private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon",
-                                                                   "end_lat", "end_lon"};
+            "end_lat", "end_lon"};
     /* Define any static variables here. Do not define any instance variables of MapServer. */
     private static GraphDB g;
     private static QuadTree qTree;
@@ -245,19 +245,12 @@ public class MapServer {
     public static BufferedImage getMapRaster(Map<String, Double> inputParams,
                                              Map<String, Object> rasteredImageParams) {
 
-        /* for(String s : inputParams.keySet()) {
-
-            System.out.println(s + " " + inputParams.get(s));
-        } */
         ArrayList<QuadTree.QuadTreeNode> collectedImages = new ArrayList();
         collectedImages = qTree.traverseTree(inputParams.get("ullat"), inputParams.get("ullon"),
                 inputParams.get("lrlat"), inputParams.get("lrlon"),
                 inputParams.get("w"), inputParams.get("h"));
         Collections.sort(collectedImages);
 
-        //for (QuadTree.QuadTreeNode q: collectedImages) {
-            //  System.out.println("img name:" + q.imageName);
-        //}
 
         int width = 0;
         int height = 0;
@@ -275,8 +268,7 @@ public class MapServer {
             lastLAT = q.lrLAT;
             lastLON = q.lrLON;
         }
-        //double lastLAT = collectedImages.get(width*height-1).UL_LAT;
-        //double lastLON = collectedImages.get(width*height-1).UL_LON;
+
         rasteredImageParams.put("raster_ul_lon", firstLON);
         rasteredImageParams.put("raster_ul_lat", firstLAT);
         rasteredImageParams.put("raster_lr_lon", lastLON);
@@ -285,51 +277,33 @@ public class MapServer {
         rasteredImageParams.put("raster_height", height);
         rasteredImageParams.put("depth", qTree.getDepth());
         rasteredImageParams.put("query_success", true);
-        //  System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
-        //System.out.println("raster_ul_lat: " + rasteredImageParams.get("raster_ul_lat"));
-        //System.out.println("raster_lr_lon: " + rasteredImageParams.get("raster_lr_lon"));
-        //System.out.println("raster_lr_lat: " + rasteredImageParams.get("raster_lr_lat"));
-        //System.out.println("raster_width: " + rasteredImageParams.get("raster_width"));
-        //System.out.println("raster_height: " + rasteredImageParams.get("raster_height"));
 
-
-        //System.out.println("width: " + width + ", height: " + height);
-        //ArrayList<String> finalImages = new ArrayList();
-        //find width and height
         int x = 0; // fix with top left tile of finalimmages
         int y = 0; // fix with top left tile of finalimages
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics gg = result.getGraphics();
 
-        for (QuadTree.QuadTreeNode image : collectedImages) {
+        for (QuadTree.QuadTreeNode image : collectedImages)
+        {
             BufferedImage bi = null;
             try {
                 String fileName = image.imageName + ".png";
                 if (!storedImages.containsKey(fileName)) {
-                    bi = ImageIO.read(new File("img/" + image.imageName + ".png"));
-                    storedImages.put(fileName, bi);
-                } else {
-                    bi = storedImages.get(fileName);
+                    storedImages.put(fileName, ImageIO.read(new File("img/" + image.imageName + ".png")));
                 }
-                //System.out.println("/img/" + image.imageName + ".png");
-                bi = ImageIO.read(new File("img/" + image.imageName + ".png"));
+                bi = storedImages.get(fileName);
             } catch (IOException e) {
                 e.printStackTrace();
             }
             gg.drawImage(bi, x, y, null);
             x += TILE_SIZE;
-            if (x >= result.getWidth()) {
+            if (x >= width)
+            {
                 x = 0;
-                // y += TILE_SIZE;
-                y += bi.getHeight();
+                y += height;
             }
         }
-        /*File outputfile = new File("saved.png");
-        try {
-            ImageIO.write(result, "png", outputfile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
         return result;
     }
 
