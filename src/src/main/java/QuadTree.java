@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class QuadTree {
     //image map and four children
     private QuadTreeNode root;
-    protected int depth;
+    public int depth;
 
     public QuadTree() {
         root = new QuadTreeNode(MapServer.ROOT_ULLAT, MapServer.ROOT_ULLON, MapServer.ROOT_LRLAT, MapServer.ROOT_LRLON);
@@ -21,13 +21,23 @@ public class QuadTree {
                 root.LR_LAT, root.LR_LON);
     }
 
-    public int calcDepthPix(double ullon, double lrlon, double w) {
+//    public int calcDepthPix(double ullon, double lrlon, double w) {
+//        depth = 0;
+//        double widthTile = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
+//        while (!((widthTile/MapServer.TILE_SIZE) < (Math.abs(lrlon - ullon)/(w)))) {
+//            widthTile = widthTile/(Math.pow(2.0, depth));
+//            depth++;
+//        }
+//        return (depth - 1);
+//    }
+
+    public int calcMaxDepth(double ullon, double lrlon, double w) {
         depth = 0;
         double queryBoxDPP = Math.abs(lrlon - ullon)/w;
         double tileDPP = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON)/MapServer.TILE_SIZE;
-        while (tileDPP > queryBoxDPP) {
+        while (depth <= 6 && tileDPP > queryBoxDPP) {
             depth++;
-            tileDPP /= 2;
+            tileDPP /=2;
         }
         return depth;
     }
@@ -35,12 +45,12 @@ public class QuadTree {
     public ArrayList<QuadTreeNode> traverseHelper(ArrayList<QuadTreeNode> arr, QuadTreeNode node, double ullat, double ullon, double lrlat, double lrlon) {
 
         //System.out.println("level: " + node.getLevel() + " depth: " + depth);
-        if (node.getLevel() == depth) {
+        if (node.getLevel() >= depth) {
             //System.out.println("node:" + node.imageName);
             arr.add(node);
         } else {
             if (node.upper_left.intersect(ullat, ullon, lrlat, lrlon)) {
-             //traverseHelper(arr, node.upper_left, node.upper_left.UL_LAT, node.upper_left.UL_LON);
+                //traverseHelper(arr, node.upper_left, node.upper_left.UL_LAT, node.upper_left.UL_LON);
                 traverseHelper(arr, node.upper_left, ullat, ullon, lrlat, lrlon);
             }
             if (node.upper_right.intersect(ullat, ullon, lrlat, lrlon)) {
@@ -50,7 +60,9 @@ public class QuadTree {
                 traverseHelper(arr, node.lower_left, ullat, ullon, lrlat, lrlon);
             }
             if (node.lower_right.intersect(ullat, ullon, lrlat, lrlon)) {
+
                 traverseHelper(arr, node.lower_right, ullat, ullon, lrlat, lrlon);
+
             }
         }
         //System.out.println("size: " + arr.size());
@@ -59,8 +71,8 @@ public class QuadTree {
 
     public ArrayList<QuadTreeNode> traverseTree(double ullat, double ullon, double lrlat, double lrlon, double w, double h) {
         ArrayList<QuadTreeNode> arr = new ArrayList();
-        depth = calcDepthPix(ullon, lrlon, w);
-
+        depth = calcMaxDepth(ullon, lrlon, w);
+        //System.out.println("depth: " + depth);
         return traverseHelper(arr, root, ullat, ullon, lrlat, lrlon);
     }
 
@@ -85,7 +97,7 @@ public class QuadTree {
             this.LR_LAT = LR_LAT; // c
             this.LR_LON = LR_LON; // d
 
-            if (this.getLevel() < 8) {
+            if (this.getLevel() < 7) {
                 upper_left = new QuadTreeNode(imageName + "1", UL_LAT, UL_LON,
                         (UL_LAT + LR_LAT) / 2, (UL_LON + LR_LON) / 2);
                 upper_right = new QuadTreeNode(imageName + "2", UL_LAT, (UL_LON + LR_LON)/2,
@@ -107,9 +119,16 @@ public class QuadTree {
 
         public boolean intersect(double user_UL_LAT, double user_UL_LON, double user_LR_LAT, double user_LR_LON) {
             // tile = this.(LR_LAT...)
-            double[] userLAT = {user_UL_LAT, user_UL_LAT,user_LR_LAT, user_LR_LAT};
-            double[] userLON = {user_UL_LON, user_LR_LON,user_UL_LON, user_LR_LON};
-            for (int i = 0; i < 4; i++) {
+            //double[] userLAT = {user_UL_LAT, user_UL_LAT,user_LR_LAT, user_LR_LAT};
+            //double[] userLON = {user_UL_LON, user_LR_LON,user_UL_LON, user_LR_LON};
+
+            if(this.LR_LON < user_UL_LON) return false;
+            if(this.UL_LON > user_LR_LON) return false;
+            if(this.LR_LAT > user_UL_LAT) return false;
+            if(this.UL_LAT < user_LR_LAT) return false;
+            return true;
+
+            /*for (int i = 0; i < 4; i++) {
                 if (check_LAT(userLAT[i], this.UL_LAT, this.LR_LAT) &&
                         check_LON(userLON[i], this.UL_LON, this.LR_LON)) {
                     return true;
@@ -127,10 +146,10 @@ public class QuadTree {
             if (check_LAT(this.LR_LAT,userLAT[0], userLAT[3]) && check_LON(this.LR_LON,userLON[0], userLON[3])) {
                 return true;
             }
-            return false;
-           // System.out.println("y,x: " + y + "," + x);
-           // System.out.println("UL y,x: " + this.UL_LAT + "," + this.UL_LON);
-           // System.out.println("LR y,x: " + this.LR_LAT + "," + this.LR_LON);
+            return false; */
+            // System.out.println("y,x: " + y + "," + x);
+            // System.out.println("UL y,x: " + this.UL_LAT + "," + this.UL_LON);
+            // System.out.println("LR y,x: " + this.LR_LAT + "," + this.LR_LON);
             //System.out.println("we reached intersect and it's: " + (UL_LON <= x && UL_LAT <= y && LR_LAT >= y && LR_LON >= x));
             //return (UL_LON <= x && UL_LAT <= y && LR_LAT >= y && LR_LON >= x);
             //boolean checkX = (this.UL_LON <= x && this.LR_LON >= x) || (this.LR_LON <= x && this.UL_LON >= x);
