@@ -23,19 +23,20 @@ public class QuadTree {
 
     public int calcDepthPix(double ullon, double lrlon, double w) {
         depth = 0;
-        double widthTile = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON);
-        while (!((widthTile/MapServer.TILE_SIZE) < (Math.abs(lrlon - ullon)/(w)))) {
-            widthTile = widthTile/(Math.pow(2.0, depth));
+        double queryBoxDPP = Math.abs(lrlon - ullon)/w;
+        double tileDPP = Math.abs(MapServer.ROOT_LRLON - MapServer.ROOT_ULLON)/MapServer.TILE_SIZE;
+        while (tileDPP > queryBoxDPP) {
             depth++;
+            tileDPP /= 2;
         }
-        return (depth - 1);
+        return depth;
     }
 
     public ArrayList<QuadTreeNode> traverseHelper(ArrayList<QuadTreeNode> arr, QuadTreeNode node, double ullat, double ullon, double lrlat, double lrlon) {
 
         //System.out.println("level: " + node.getLevel() + " depth: " + depth);
         if (node.getLevel() == depth) {
-            System.out.println("node:" + node.imageName);
+            //System.out.println("node:" + node.imageName);
             arr.add(node);
         } else {
             if (node.upper_left.intersect(ullat, ullon, lrlat, lrlon)) {
@@ -43,15 +44,13 @@ public class QuadTree {
                 traverseHelper(arr, node.upper_left, ullat, ullon, lrlat, lrlon);
             }
             if (node.upper_right.intersect(ullat, ullon, lrlat, lrlon)) {
-            traverseHelper(arr, node.upper_right, ullat, ullon, lrlat, lrlon);
+                traverseHelper(arr, node.upper_right, ullat, ullon, lrlat, lrlon);
             }
             if (node.lower_left.intersect(ullat, ullon, lrlat, lrlon)) {
-            traverseHelper(arr, node.lower_left, ullat, ullon, lrlat, lrlon);
+                traverseHelper(arr, node.lower_left, ullat, ullon, lrlat, lrlon);
             }
             if (node.lower_right.intersect(ullat, ullon, lrlat, lrlon)) {
-
-            traverseHelper(arr, node.lower_right, ullat, ullon, lrlat, lrlon);
-
+                traverseHelper(arr, node.lower_right, ullat, ullon, lrlat, lrlon);
             }
         }
         //System.out.println("size: " + arr.size());
@@ -61,7 +60,7 @@ public class QuadTree {
     public ArrayList<QuadTreeNode> traverseTree(double ullat, double ullon, double lrlat, double lrlon, double w, double h) {
         ArrayList<QuadTreeNode> arr = new ArrayList();
         depth = calcDepthPix(ullon, lrlon, w);
-        System.out.println("depth: " + depth);
+
         return traverseHelper(arr, root, ullat, ullon, lrlat, lrlon);
     }
 

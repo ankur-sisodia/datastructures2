@@ -256,44 +256,41 @@ public class MapServer {
                 inputParams.get("w"),inputParams.get("h"));
         Collections.sort(collectedImages);
 
-        for (QuadTree.QuadTreeNode q: collectedImages) {
-            System.out.println("img name:" + q.imageName);
-        }
+//        if (qTree.depth == 7) {
+//            for (QuadTree.QuadTreeNode q: collectedImages) {
+//                System.out.println("img name:" + q.imageName);
+//            }
+//        }
+
+
 
         int width = 0;
-        int height =0;
+        int  height = 0;
         double firstLAT = collectedImages.get(0).UL_LAT;
         double firstLON = collectedImages.get(0).UL_LON;
         double lastLAT = firstLAT;
         double lastLON = firstLON;
         for (QuadTree.QuadTreeNode q: collectedImages) {
-            if (q.UL_LAT == firstLAT)
-                width+= TILE_SIZE;
-            if (q.UL_LON == firstLON)
-                height+= TILE_SIZE;
+            if (q.UL_LAT == firstLAT) {
+                width += TILE_SIZE;
+            }
+            if (q.UL_LON == firstLON) {
+                height += TILE_SIZE;
+            }
             lastLAT = q.UL_LAT;
             lastLON = q.UL_LON;
         }
-        //double lastLAT = collectedImages.get(width*height-1).UL_LAT;
-        //double lastLON = collectedImages.get(width*height-1).UL_LON;
+
+
+
         rasteredImageParams.put("raster_ul_lon", firstLON);
         rasteredImageParams.put("raster_ul_lat", firstLAT);
         rasteredImageParams.put("raster_lr_lon", lastLON);
         rasteredImageParams.put("raster_lr_lat", lastLAT);
         rasteredImageParams.put("raster_width", width);
-        rasteredImageParams.put("raster_height", height);
+        rasteredImageParams.put("depth", qTree.depth);
         rasteredImageParams.put("query_success", true);
-        System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
-        System.out.println("raster_ul_lat: " + rasteredImageParams.get("raster_ul_lat"));
-        System.out.println("raster_lr_lon: " + rasteredImageParams.get("raster_lr_lon"));
-        System.out.println("raster_lr_lat: " + rasteredImageParams.get("raster_lr_lat"));
-        System.out.println("raster_width: " + rasteredImageParams.get("raster_width"));
-        System.out.println("raster_height: " + rasteredImageParams.get("raster_height"));
 
-
-        System.out.println("width: " + width + ", height: " + height);
-        //ArrayList<String> finalImages = new ArrayList();
-        //find width and height
         int x = 0; // fix with top left tile of finalimmages
         int y = 0; // fix with top left tile of finalimages
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -314,6 +311,8 @@ public class MapServer {
                 //System.out.println("/img/" + image.imageName + ".png");
                 //bi = ImageIO.read(new File("img/" + image.imageName + ".png"));
             } catch (IOException e) {
+                System.out.println("depth: " + qTree.depth);
+                System.out.println(new File("img/" + image.imageName + ".png"));
                 e.printStackTrace();
             }
             g.drawImage(bi, x, y, null);
@@ -330,6 +329,7 @@ public class MapServer {
         } catch (IOException e) {
             e.printStackTrace();
         }*/
+
         return result;
     }
 
