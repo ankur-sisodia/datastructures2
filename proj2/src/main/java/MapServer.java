@@ -301,8 +301,7 @@ public class MapServer {
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = result.getGraphics();
 
-        for (QuadTree.QuadTreeNode image : collectedImages)
-        {
+        for (QuadTree.QuadTreeNode image : collectedImages) {
             BufferedImage bi = null;
             try {
                 String fileName = image.imageName + ".png";
@@ -319,8 +318,7 @@ public class MapServer {
             }
             g.drawImage(bi, x, y, null);
             x += TILE_SIZE;
-            if (x >= result.getWidth())
-            {
+            if (x >= result.getWidth()) {
                 x = 0;
                 // y += TILE_SIZE;
                 y += bi.getHeight();
