@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -262,17 +261,17 @@ public class MapServer {
 
         int width = 0;
         int height =0;
-        double firstLAT = collectedImages.get(0).UL_LAT;
-        double firstLON = collectedImages.get(0).UL_LON;
+        double firstLAT = collectedImages.get(0).ulLAT;
+        double firstLON = collectedImages.get(0).ulLON;
         double lastLAT = firstLAT;
         double lastLON = firstLON;
         for (QuadTree.QuadTreeNode q: collectedImages) {
-            if (q.UL_LAT == firstLAT)
+            if (q.ulLAT == firstLAT)
                 width+= TILE_SIZE;
-            if (q.UL_LON == firstLON)
+            if (q.ulLON == firstLON)
                 height+= TILE_SIZE;
-            lastLAT = q.LR_LAT;
-            lastLON = q.LR_LON;
+            lastLAT = q.lrLAT;
+            lastLON = q.lrLON;
         }
         //double lastLAT = collectedImages.get(width*height-1).UL_LAT;
         //double lastLON = collectedImages.get(width*height-1).UL_LON;
@@ -282,7 +281,7 @@ public class MapServer {
         rasteredImageParams.put("raster_lr_lat", lastLAT);
         rasteredImageParams.put("raster_width", width);
         rasteredImageParams.put("raster_height", height);
-        rasteredImageParams.put("depth", qTree.depth);
+        rasteredImageParams.put("depth", qTree.getDepth());
         rasteredImageParams.put("query_success", true);
       //  System.out.println("raster_ul_lon: " + rasteredImageParams.get("raster_ul_lon"));
         //System.out.println("raster_ul_lat: " + rasteredImageParams.get("raster_ul_lat"));
