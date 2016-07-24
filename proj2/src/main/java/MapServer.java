@@ -299,7 +299,7 @@ public class MapServer {
         int x = 0; // fix with top left tile of finalimmages
         int y = 0; // fix with top left tile of finalimages
         BufferedImage result = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-        Graphics g = result.getGraphics();
+        Graphics gg = result.getGraphics();
 
         for (QuadTree.QuadTreeNode image : collectedImages) {
             BufferedImage bi = null;
@@ -316,7 +316,7 @@ public class MapServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            g.drawImage(bi, x, y, null);
+            gg.drawImage(bi, x, y, null);
             x += TILE_SIZE;
             if (x >= result.getWidth()) {
                 x = 0;
