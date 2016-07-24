@@ -1,3 +1,4 @@
+
 /**
  * Created by asisodia on 7/21/2016.
  */
@@ -119,12 +120,15 @@ public class QuadTree {
             if(this.lrLON < userULLON) {
                 return false;
             }
+
             if(this.ulLON > userLRLON) {
                 return false;
             }
+
             if(this.lrLAT > userULLAT) {
                 return false;
             }
+
             if(this.ulLAT < userLRLAT) {
                 return false;
             }
