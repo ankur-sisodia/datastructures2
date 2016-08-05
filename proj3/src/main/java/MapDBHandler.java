@@ -91,11 +91,14 @@ public class MapDBHandler extends DefaultHandler {
                     .equals("name")) {
             // Added by Jason
             String cleanWord = attributes.getValue("v");
-            //System.out.println("C2: " + cleanWord);
-            if (!wordSet.contains(cleanWord)) {
-                prefixTree.insert(cleanWord);
-                wordSet.add(cleanWord);
-            }
+            prefixTree.insert(cleanWord);
+
+//
+//            //System.out.println("C2: " + cleanWord);
+//            if (!wordSet.contains(cleanWord)) {
+//                prefixTree.insert(cleanWord);
+//                wordSet.add(cleanWord);
+//            }
                 //System.out.println("Node with name: " + attributes.getValue("v"));
         } else if (qName.equals("nd")) {
             String ref = attributes.getValue("ref");
