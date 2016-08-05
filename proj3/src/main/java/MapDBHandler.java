@@ -68,37 +68,16 @@ public class MapDBHandler extends DefaultHandler {
             activeState = "node";
             if (!g.adjHashMap.containsKey(attributes.getValue("id"))) {
                 String id = attributes.getValue("id");
-                float lon = Float.valueOf(attributes.getValue("lon"));
-                float lat = Float.valueOf(attributes.getValue("lat"));
+                double lon = Double.valueOf(attributes.getValue("lon"));
+                double lat = Double.valueOf(attributes.getValue("lat"));
 
                 g.addNodeToGraph(id, lon, lat);
                 // check to see in my graph
                 // if not add to graph
             }
-            // Added by Jason
-            // Check for name tag, add value to trie
-            if (attributes.getValue("k") == "name") {
-                String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
-                if (!wordSet.contains(cleanWord)) {
-                    prefixTree.insert(cleanWord);
-                    wordSet.add(cleanWord);
-                }
-            }
         } else if (qName.equals("way")) {
             activeState = "way";
             //System.out.println("Beginning a way...");
-            // Added by Jason
-            // Check for name tag, add value to trie
-            if (attributes.getValue("k") == "name") {
-                String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
-                if (!wordSet.contains(cleanWord)) {
-                    prefixTree.insert(cleanWord);
-                    wordSet.add(cleanWord);
-                }
-
-            }
-
-
         } else if (activeState.equals("way") && qName.equals("tag")) {
                 String k = attributes.getValue("k");
                 String v = attributes.getValue("v");
@@ -110,6 +89,13 @@ public class MapDBHandler extends DefaultHandler {
                // System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                     .equals("name")) {
+            // Added by Jason
+            String cleanWord = attributes.getValue("v");
+            //System.out.println("C2: " + cleanWord);
+            if (!wordSet.contains(cleanWord)) {
+                prefixTree.insert(cleanWord);
+                wordSet.add(cleanWord);
+            }
                 //System.out.println("Node with name: " + attributes.getValue("v"));
         } else if (qName.equals("nd")) {
             String ref = attributes.getValue("ref");
@@ -133,11 +119,10 @@ public class MapDBHandler extends DefaultHandler {
         if (qName.equals("way")) {
             if (activeWAY_ALLOWED == true) {
                 for(int i = 0; i < activeWAY_NODES.size()-1; i++){
-                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i+1));
-                    g.adjHashMap.get(activeWAY_NODES.get(i+1)).add(activeWAY_NODES.get(i));
+                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(new Edge(activeWAY_NODES.get(i), activeWAY_NODES.get(i+1)));
+                    g.adjHashMap.get(activeWAY_NODES.get(i+1)).add(new Edge(activeWAY_NODES.get(i+1), activeWAY_NODES.get(i)));
                 }
             }
-
             // System.out.println("Finishing a way...");
             activeWAY_ALLOWED = false;
             activeWAY_NODES.clear();

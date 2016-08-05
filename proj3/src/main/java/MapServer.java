@@ -357,6 +357,11 @@ public class MapServer {
     public static List<Long> findAndDrawRoute(Map<String, Double> routeParams,
                                               Map<String, Object> rasterImageParams,
                                               BufferedImage im) {
+        ArrayList<Long> listofNodeIDs = new ArrayList<Long>();
+
+
+
+
         return new ArrayList<>();
     }
 

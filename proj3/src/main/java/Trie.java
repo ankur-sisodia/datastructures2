@@ -23,6 +23,9 @@ public class Trie {
     public void insert(String word) {
         HashMap<Character, TrieNode> children = root.children;
 
+        String origWord = word;
+        word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+
         TrieNode currParent;
 
         currParent = root;
@@ -43,8 +46,10 @@ public class Trie {
             currParent = t;
 
             // set leaf node
-            if (i == word.length() - 1)
+            if (i == word.length() - 1) {
                 t.isLeaf = true;
+                t.name = origWord;
+            }
         }
     }
 
@@ -84,23 +89,23 @@ public class Trie {
         if (node.isLeaf) {
             // System.out.println("leaf node found");
 
-            TrieNode currWrd = node;
-
-            Stack<String> prefixStack = new Stack<>();
-
-            while (currWrd != prefixRoot) {
-                prefixStack.push(Character.toString(currWrd.c));
-                currWrd = currWrd.parent;
-            }
-
-            String wrd = currPrefix;
-
-            while (!prefixStack.empty()) {
-                wrd = wrd + prefixStack.pop();
-            }
-
-            // System.out.println(wrd);
-            words.add(wrd);
+//            TrieNode currWrd = node;
+//
+//            Stack<String> prefixStack = new Stack<>();
+//
+//            while (currWrd != prefixRoot) {
+//                prefixStack.push(Character.toString(currWrd.c));
+//                currWrd = currWrd.parent;
+//            }
+//
+//            String wrd = currPrefix;
+//
+//            while (!prefixStack.empty()) {
+//                wrd = wrd + prefixStack.pop();
+//            }
+//
+//            System.out.println(node.name);
+            words.add(node.name);
 
         }
 

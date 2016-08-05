@@ -5,18 +5,18 @@ import java.util.HashMap;
  */
 public class Node {
     //private variables
-    private String myID;
-    private float myLon, myLat;
+    public String myID;
+    public double myLon, myLat;
     public Node() {
     }
 
-    public Node(String id, float lon, float lat) {
+    public Node(String id, double lon, double lat) {
             myID = id;
             myLon = lon;
             myLat = lat;
         }
 
-        public double findDistance(Node n2) {
-            return Math.hypot(n2.myLon-this.myLon, n2.myLat-this.myLat);
+        public double EuclidianDistance(Node n2) {
+            return (double) Math.hypot(n2.myLon-this.myLon, n2.myLat-this.myLat);
         }
     }

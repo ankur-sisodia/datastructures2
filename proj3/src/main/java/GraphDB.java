@@ -16,11 +16,11 @@ import java.util.*;
  * @author Alan Yao
  */
 public class GraphDB {
-    public HashMap<String, ArrayList<String>> adjHashMap;
-    public HashMap<String, Node> nodeList;
+    public static HashMap<String, Node> nodeList;
+    public static HashMap<String, ArrayList<Edge>> adjHashMap;
 
-    public void addNodeToGraph(String id, float lon, float lat) {
-        adjHashMap.put(id, new ArrayList<String>());
+    public void addNodeToGraph(String id, double lon, double lat) {
+        adjHashMap.put(id, new ArrayList<Edge>());
         nodeList.put(id, new Node(id, lon, lat));
     }
     /**
@@ -29,8 +29,8 @@ public class GraphDB {
      */
     public GraphDB(String dbPath) {
         try {
-            adjHashMap = new HashMap<String, ArrayList<String>>();
             nodeList = new HashMap<String, Node>();
+            adjHashMap = new HashMap<String, ArrayList<Edge>>();
             File inputFile = new File(dbPath);
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
@@ -58,8 +58,9 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        HashMap<String, ArrayList<String>> tempHashMap_AdjList = new HashMap<String, ArrayList<String>>();
         HashMap<String, Node> tempHashMap_NodeList = new HashMap<String, Node>();
+        HashMap<String, ArrayList<Edge>> tempHashMap_AdjList = new HashMap<String, ArrayList<Edge>>();
+
         for(String k: adjHashMap.keySet()) {
             if(adjHashMap.get(k).size() != 0) {
                 tempHashMap_AdjList.put(k,adjHashMap.get(k));
