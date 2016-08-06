@@ -105,7 +105,7 @@ public class MapDBHandler extends DefaultHandler {
                 }
             }
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
-                    .equals("name")) {
+                .equals("name")) {
 
             // Added by Jason
             node.setMyName(attributes.getValue("v"));
@@ -113,7 +113,7 @@ public class MapDBHandler extends DefaultHandler {
             node = new Node();
             // --------------
 
-                //System.out.println("Node with name: " + attributes.getValue("v"));
+            //System.out.println("Node with name: " + attributes.getValue("v"));
         } else if (qName.equals("nd")) {
             String ref = attributes.getValue("ref");
             activeWAY_NODES.add(ref);

@@ -12,8 +12,8 @@ public class Edge {
         to = t;
         myDistance = Math.sqrt(Math.pow(GraphDB.getNodeList().get(f).getMyLon() + GraphDB.getNodeList().get(t).getMyLon(), 2)
                 + Math.pow(GraphDB.getNodeList().get(f).getMyLat() + GraphDB.getNodeList().get(t).getMyLat(), 2));
-       // System.out.println("mydistance: " + myDistance);
-                //(GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat) * (GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat));
+        // System.out.println("mydistance: " + myDistance);
+        //(GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat) * (GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat));
 
 //        myDistance = (long) Math.hypot(GraphDB.nodeList.get(f).myLon - GraphDB.nodeList.get(t).myLon,
 //                GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat);

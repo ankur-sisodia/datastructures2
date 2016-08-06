@@ -8,7 +8,6 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.*;
 
-
 /**
  * Wraps the parsing functionality of the MapDBHandler as an example.
  * You may choose to add to the functionality of this class if you wish.
