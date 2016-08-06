@@ -100,6 +100,7 @@ public class MapDBHandler extends DefaultHandler {
             //prefixTree.insert(attributes.getValue("v"));
             //System.out.println("Node: " + node.getMyName() + " ID: " + node.getMyID() + " Lat: " + node.getMyLat() + " Lon: " + node.getMyLon());
             prefixTree.insert(attributes.getValue("v"), node);
+            node = new Node();
 
             // --------------
 
