@@ -55,14 +55,16 @@ public class MapServer {
      * lrlat -> lower right corner latitude,<br> lrlon -> lower right corner longitude <br>
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
-    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat", "lrlon", "w", "h"};
+    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon",
+            "lrlat", "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
      * start_lat -> start point latitude,<br> start_lon -> start point longitude,<br>
      * end_lat -> end point latitude, <br>end_lon -> end point longitude.
      **/
-    private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon", "end_lat", "end_lon"};
+    private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon",
+            "end_lat", "end_lon"};
     /* Define any static variables here. Do not define any instance variables of MapServer. */
     private static GraphDB g;
     private static QuadTree qTree;
@@ -76,7 +78,7 @@ public class MapServer {
     public static void initialize() {
         g = new GraphDB(OSM_DB_PATH);
         System.out.println("size of hash map: " + g.adjHashMap.size());
-        // /ANKUR ADD
+        // ANKUR ADD
 
         qTree = new QuadTree();
         storedImages = new HashMap();
@@ -367,10 +369,10 @@ public class MapServer {
 
         prefix = prefix.replaceAll("[^a-zA-Z ]", "").toLowerCase();
 
-        if (MapDBHandler.prefixTree.startsWith(prefix)) {
-            TrieNode node = MapDBHandler.prefixTree.searchNode(prefix);
-            MapDBHandler.prefixTree.wordsFinderTraversal(prefix);
-            return MapDBHandler.prefixTree.displayFoundWords();
+        if (MapDBHandler.getPrefixTree().startsWith(prefix)) {
+            TrieNode node = MapDBHandler.getPrefixTree().searchNode(prefix);
+            MapDBHandler.getPrefixTree().wordsFinderTraversal(prefix);
+            return MapDBHandler.getPrefixTree().displayFoundWords();
         }
         return new ArrayList<>();
     }
@@ -396,9 +398,9 @@ public class MapServer {
 
         ArrayList<Node> nodeList;
 
-        if (MapDBHandler.prefixTree.startsWith(locationName)) {
-            TrieNode node = MapDBHandler.prefixTree.searchNode(locationName);
-            nodeList = MapDBHandler.prefixTree.nodesFinderTraversal(locationName);
+        if (MapDBHandler.getPrefixTree().startsWith(locationName)) {
+            TrieNode node = MapDBHandler.getPrefixTree().searchNode(locationName);
+            nodeList = MapDBHandler.getPrefixTree().nodesFinderTraversal(locationName);
 
             for (int i = 0; i < nodeList.size(); i++) {
                 HashMap<String, Object> mapList = new HashMap<>();

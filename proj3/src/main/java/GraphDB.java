@@ -15,8 +15,8 @@ import java.util.*;
  * @author Alan Yao
  */
 public class GraphDB {
-    public HashMap<String, ArrayList<String>> adjHashMap;
-    public HashMap<String, Node> nodeList;
+    private HashMap<String, ArrayList<String>> adjHashMap;
+    private HashMap<String, Node> nodeList;
 
     public void addNodeToGraph(String id, double lon, double lat) {
         adjHashMap.put(id, new ArrayList<>());
@@ -56,16 +56,16 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        HashMap<String, ArrayList<String>> tempHashMap_AdjList = new HashMap<>();
-        HashMap<String, Node> tempHashMap_NodeList = new HashMap<>();
+        HashMap<String, ArrayList<String>> tempHashMapAdjList = new HashMap<>();
+        HashMap<String, Node> tempHashMapNodeList = new HashMap<>();
         for (String k: adjHashMap.keySet()) {
             if (adjHashMap.get(k).size() != 0) {
-                tempHashMap_AdjList.put(k, adjHashMap.get(k));
-                tempHashMap_NodeList.put(k, nodeList.get(k));
+                tempHashMapAdjList.put(k, adjHashMap.get(k));
+                tempHashMapNodeList.put(k, nodeList.get(k));
             }
         }
-        adjHashMap = tempHashMap_AdjList;
-        nodeList = tempHashMap_NodeList;
+        adjHashMap = tempHashMapAdjList;
+        nodeList = tempHashMapNodeList;
 
     }
 }

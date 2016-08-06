@@ -32,8 +32,18 @@ public class MapDBHandler extends DefaultHandler {
     private ArrayList<String> activeWAY_NODES = new ArrayList<>();
 
     private final GraphDB g;
-    public static Trie prefixTree;
+
     // Added by Jason
+    private static Trie prefixTree;
+
+    public static Trie getPrefixTree() {
+        return prefixTree;
+    }
+
+    public static void setPrefixTree(Trie prefixTree) {
+        MapDBHandler.prefixTree = prefixTree;
+    }
+
     Node node = new Node();
     // --------------
 
@@ -124,8 +134,8 @@ public class MapDBHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way")) {
-            if (activeWAY_ALLOWED == true) {
-                for(int i = 0; i < activeWAY_NODES.size() - 1; i++) {
+            if (activeWAY_ALLOWED) {
+                for (int i = 0; i < activeWAY_NODES.size() - 1; i++) {
                     g.adjHashMap.get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
                     g.adjHashMap.get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
                 }
