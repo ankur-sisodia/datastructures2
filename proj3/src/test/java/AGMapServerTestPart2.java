@@ -128,10 +128,12 @@ public class AGMapServerTestPart2 {
     public void testCFindAndSetRoute() throws Exception {
         for (int i = 0; i < params.size() / 2; i++) {
             TestParams p = params.get(i);
-            List<Long> student_route_result = MapServer.findAndDrawRoute(
-                    p.routeParams, null, null);
-            assertEquals("Found route differs for input: " + p.routeParams + ".\n",
-                    p.routeResult, student_route_result);
+            for (int x = 0; x < 10; x++) {
+                List<Long> student_route_result = MapServer.findAndDrawRoute(
+                        p.routeParams, null, null);
+                assertEquals("Found route differs for input: " + p.routeParams + ".\n",
+                        p.routeResult, student_route_result);
+            }
         }
         passedRoute++;
     }
