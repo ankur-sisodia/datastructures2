@@ -55,16 +55,14 @@ public class MapServer {
      * lrlat -> lower right corner latitude,<br> lrlon -> lower right corner longitude <br>
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
-    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon",
-            "lrlat", "lrlon", "w", "h"};
+    private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon", "lrlat", "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
      * start_lat -> start point latitude,<br> start_lon -> start point longitude,<br>
      * end_lat -> end point latitude, <br>end_lon -> end point longitude.
      **/
-    private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon",
-            "end_lat", "end_lon"};
+    private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon", "end_lat", "end_lon"};
     /* Define any static variables here. Do not define any instance variables of MapServer. */
     private static GraphDB g;
     private static QuadTree qTree;
@@ -76,9 +74,9 @@ public class MapServer {
      * This is for testing purposes, and you may fail tests otherwise.
      **/
     public static void initialize() {
-         g = new GraphDB(OSM_DB_PATH);
-         System.out.println("size of hash map: " + g.adjHashMap.size());
-        /// /ANKUR ADD
+        g = new GraphDB(OSM_DB_PATH);
+        System.out.println("size of hash map: " + g.adjHashMap.size());
+        // /ANKUR ADD
 
         qTree = new QuadTree();
         storedImages = new HashMap();

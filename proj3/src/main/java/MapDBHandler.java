@@ -87,14 +87,13 @@ public class MapDBHandler extends DefaultHandler {
             //System.out.println("Beginning a way...");
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
-                String k = attributes.getValue("k");
-                String v = attributes.getValue("v");
-                if (k.equals("highway")) {
-                    if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
-                        activeWAY_ALLOWED = true;
-                    }
+            String k = attributes.getValue("k");
+            String v = attributes.getValue("v");
+            if (k.equals("highway")) {
+                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                    activeWAY_ALLOWED = true;
                 }
-               // System.out.println("Tag with k=" + k + ", v=" + v + ".");
+            }
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                     .equals("name")) {
 
@@ -126,12 +125,11 @@ public class MapDBHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way")) {
             if (activeWAY_ALLOWED == true) {
-                for(int i = 0; i < activeWAY_NODES.size()-1; i++){
-                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i+1));
-                    g.adjHashMap.get(activeWAY_NODES.get(i+1)).add(activeWAY_NODES.get(i));
+                for(int i = 0; i < activeWAY_NODES.size() - 1; i++) {
+                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
+                    g.adjHashMap.get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
                 }
             }
-
             // System.out.println("Finishing a way...");
             activeWAY_ALLOWED = false;
             activeWAY_NODES.clear();

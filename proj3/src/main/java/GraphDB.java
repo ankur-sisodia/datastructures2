@@ -38,7 +38,6 @@ public class GraphDB {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        System.out.println("size of hash map prior to clean: " + nodeList.size() + ", adjlist:" + adjHashMap.size());
         clean();
     }
 
@@ -59,10 +58,10 @@ public class GraphDB {
     private void clean() {
         HashMap<String, ArrayList<String>> tempHashMap_AdjList = new HashMap<>();
         HashMap<String, Node> tempHashMap_NodeList = new HashMap<>();
-        for(String k: adjHashMap.keySet()) {
-            if(adjHashMap.get(k).size() != 0) {
-                tempHashMap_AdjList.put(k,adjHashMap.get(k));
-                tempHashMap_NodeList.put(k,nodeList.get(k));
+        for (String k: adjHashMap.keySet()) {
+            if (adjHashMap.get(k).size() != 0) {
+                tempHashMap_AdjList.put(k, adjHashMap.get(k));
+                tempHashMap_NodeList.put(k, nodeList.get(k));
             }
         }
         adjHashMap = tempHashMap_AdjList;
@@ -70,11 +69,3 @@ public class GraphDB {
 
     }
 }
-// add - adding a neighbor
-//    public void addNeighbor(String id, Attribute attributes) {
-//        if (adjHashMap.get(id) == null) {
-//            this.addNodeToGraph(id);
-//        }
-//        Node n = new Node();
-//        adjHashMap.get(id).add(n);
-//    }
