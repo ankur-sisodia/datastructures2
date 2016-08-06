@@ -368,7 +368,7 @@ public class MapServer {
 
         if (!(im == null)) {
             Graphics2D a = im.createGraphics();
-            Stroke s = new BasicStroke(MapServer.ROUTE_STROKE_WIDTH_PX,BasicStroke.CAP_ROUND,
+            Stroke s = new BasicStroke(MapServer.ROUTE_STROKE_WIDTH_PX, BasicStroke.CAP_ROUND,
                     BasicStroke.JOIN_ROUND);
             a.setColor(ROUTE_STROKE_COLOR);
             int prevX = getXPixel(GraphDB.getNodeList().get(String.valueOf(startendVertex[0]))
@@ -403,7 +403,7 @@ public class MapServer {
     public static int getYPixel(double nodeLat, Map<String, Object> raster) {
         double yPixel;
         int hei = (int) raster.get("raster_height");
-        yPixel = (double)hei * ((double) raster.get("raster_ul_lat") - nodeLat)
+        yPixel = (double) hei * ((double) raster.get("raster_ul_lat") - nodeLat)
                 / ((double) raster.get("raster_ul_lat") - (double) raster.get("raster_lr_lat"));
         return (int) yPixel;
     }

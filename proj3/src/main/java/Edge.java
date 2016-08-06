@@ -10,10 +10,10 @@ public class Edge {
     public Edge(String f, String t) {
         from = f;
         to = t;
-        myDistance = Math.sqrt(Math.pow(GraphDB.getNodeList().get(f).getMyLon() +
-                GraphDB.getNodeList().get(t).getMyLon(), 2)
-                + Math.pow(GraphDB.getNodeList().get(f).getMyLat() +
-                GraphDB.getNodeList().get(t).getMyLat(), 2));
+        myDistance = Math.sqrt(Math.pow(GraphDB.getNodeList().get(f).getMyLon()
+                + GraphDB.getNodeList().get(t).getMyLon(), 2)
+                + Math.pow(GraphDB.getNodeList().get(f).getMyLat()
+                + GraphDB.getNodeList().get(t).getMyLat(), 2));
     }
 
     public void setDistance(double dist) {

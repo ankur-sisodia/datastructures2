@@ -168,7 +168,7 @@ public class GraphDB {
 
         closeNode[0] = nodeList.keySet().iterator().next();
         closeNode[1] = nodeList.keySet().iterator().next();
-        for(String s: nodeList.keySet()) {
+        for (String s: nodeList.keySet()) {
             if (nodeList.get(s).euclidianDistance(startExact)
                     < nodeList.get(closeNode[0]).euclidianDistance(startExact)) {
                 closeNode[0] = s;
