@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.events.Attribute;
 import java.util.ArrayList;
 import java.util.*;
 
@@ -19,8 +18,8 @@ public class GraphDB {
     public HashMap<String, ArrayList<String>> adjHashMap;
     public HashMap<String, Node> nodeList;
 
-    public void addNodeToGraph(String id, float lon, float lat) {
-        adjHashMap.put(id, new ArrayList<String>());
+    public void addNodeToGraph(String id, double lon, double lat) {
+        adjHashMap.put(id, new ArrayList<>());
         nodeList.put(id, new Node(id, lon, lat));
     }
     /**
@@ -29,8 +28,8 @@ public class GraphDB {
      */
     public GraphDB(String dbPath) {
         try {
-            adjHashMap = new HashMap<String, ArrayList<String>>();
-            nodeList = new HashMap<String, Node>();
+            adjHashMap = new HashMap<>();
+            nodeList = new HashMap<>();
             File inputFile = new File(dbPath);
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
@@ -58,8 +57,8 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        HashMap<String, ArrayList<String>> tempHashMap_AdjList = new HashMap<String, ArrayList<String>>();
-        HashMap<String, Node> tempHashMap_NodeList = new HashMap<String, Node>();
+        HashMap<String, ArrayList<String>> tempHashMap_AdjList = new HashMap<>();
+        HashMap<String, Node> tempHashMap_NodeList = new HashMap<>();
         for(String k: adjHashMap.keySet()) {
             if(adjHashMap.get(k).size() != 0) {
                 tempHashMap_AdjList.put(k,adjHashMap.get(k));

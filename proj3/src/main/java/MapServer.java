@@ -10,13 +10,11 @@ import java.util.List;
 
 /* Maven is used to pull in these dependencies. */
 import com.google.gson.Gson;
-import com.sun.org.apache.xpath.internal.SourceTree;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
-import javax.sound.midi.Soundbank;
 
 import static spark.Spark.*;
 
@@ -398,13 +396,13 @@ public class MapServer {
 
         locationName = locationName.replaceAll("[^a-zA-Z ]", "").toLowerCase();
 
-        ArrayList<Map<String, Object>> locationList = new ArrayList<>();
+        LinkedList<Map<String, Object>> locationList = new LinkedList<>();
 
-        if (MapDBHandler.locationMap.containsKey(locationName)) {
-            for (Object o : MapDBHandler.locationMap.keySet()) {
-                if (o.equals(locationName)) {
-                    //locationList.add(o);
-                }
+        for (int i = 0; i < MapDBHandler.prefixList.size(); i++) {
+            String mapName = MapDBHandler.prefixList.get(i).get("name").toString();
+            mapName = mapName.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+            if (mapName.equals(locationName)) {
+                locationList.add(MapDBHandler.prefixList.get(i));
             }
         }
         return locationList;

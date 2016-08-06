@@ -34,14 +34,14 @@ public class MapDBHandler extends DefaultHandler {
     private final GraphDB g;
     public static Trie prefixTree;
     // Added by Jason
-    public static HashMap<String, Object> locationMap;
+    public static ArrayList<Map<String, Object>> prefixList;
+    Node node = new Node();
 
 
     public MapDBHandler(GraphDB g) {
         this.g = g;
         prefixTree = new Trie();
-        // Added by Jason
-        locationMap = new HashMap<>();
+        prefixList = new ArrayList<>();
     }
 
     /**
@@ -67,12 +67,16 @@ public class MapDBHandler extends DefaultHandler {
             activeState = "node";
             if (!g.adjHashMap.containsKey(attributes.getValue("id"))) {
                 String id = attributes.getValue("id");
-                float lon = Float.valueOf(attributes.getValue("lon"));
-                float lat = Float.valueOf(attributes.getValue("lat"));
+                double lon = Double.valueOf(attributes.getValue("lon"));
+                double lat = Double.valueOf(attributes.getValue("lat"));
 
                 g.addNodeToGraph(id, lon, lat);
                 // check to see in my graph
                 // if not add to graph
+
+                node.setMyID(id);
+                node.setMyLon(lon);
+                node.setMyLat(lat);
             }
 
         } else if (qName.equals("way")) {
@@ -95,9 +99,17 @@ public class MapDBHandler extends DefaultHandler {
             String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
             prefixTree.insert(attributes.getValue("v"));
 
-//            Node locationNode = new Node(attributes.getValue("id"), Float.valueOf(attributes.getValue("lon")), Float.valueOf(attributes.getValue("lat")), attributes.getValue("v"));
-//
-//            locationMap.put(cleanWord, locationNode);
+            node.setMyName(attributes.getValue("v"));
+
+            HashMap<String, Object> locationMap = new HashMap<>();
+
+            locationMap.put("lat", node.getMyLat());
+            locationMap.put("lon", node.getMyLon());
+            locationMap.put("name", node.getMyName());
+            locationMap.put("id", Long.parseLong(node.getMyID()));
+
+            prefixList.add(locationMap);
+
             // --------------
 
                 //System.out.println("Node with name: " + attributes.getValue("v"));
