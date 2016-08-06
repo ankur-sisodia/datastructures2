@@ -2,12 +2,17 @@
  * Created by asisodia on 8/4/2016.
  */
 public class Node {
-    public void setMyID(String myID) {
-        this.myID = myID;
-    }
 
     //private variables
     private String myID;
+    private double myLon;
+    private double myLat;
+    private String myName;
+
+    // Added by Jason
+    public void setMyID(String myID) {
+        this.myID = myID;
+    }
 
     public String getMyName() {
         return myName;
@@ -16,8 +21,6 @@ public class Node {
     public void setMyName(String myName) {
         this.myName = myName;
     }
-
-    private String myName;
 
     public void setMyLon(double myLon) {
         this.myLon = myLon;
@@ -38,9 +41,8 @@ public class Node {
     public double getMyLat() {
         return myLat;
     }
+    // --------------
 
-    private double myLon;
-    private double myLat;
     public Node() {
 
     }
@@ -49,13 +51,6 @@ public class Node {
             myID = id;
             myLon = lon;
             myLat = lat;
-    }
-
-    public Node(String id, double lon, double lat, String name) {
-        myID = id;
-        myLon = lon;
-        myLat = lat;
-        myName = name;
     }
 
         public double findDistance(Node n2) {

@@ -29,19 +29,20 @@ public class MapDBHandler extends DefaultHandler {
                     "secondary_link", "tertiary_link"));
     private String activeState = "";
     private boolean activeWAY_ALLOWED;
-    private ArrayList<String> activeWAY_NODES = new ArrayList<String>();;
+    private ArrayList<String> activeWAY_NODES = new ArrayList<>();
 
     private final GraphDB g;
     public static Trie prefixTree;
     // Added by Jason
-    public static ArrayList<Map<String, Object>> prefixList;
     Node node = new Node();
+    // --------------
 
 
     public MapDBHandler(GraphDB g) {
         this.g = g;
+        // Added by Jason
         prefixTree = new Trie();
-        prefixList = new ArrayList<>();
+        // --------------
     }
 
     /**
@@ -74,9 +75,11 @@ public class MapDBHandler extends DefaultHandler {
                 // check to see in my graph
                 // if not add to graph
 
+                // Added by Jason
                 node.setMyID(id);
                 node.setMyLon(lon);
                 node.setMyLat(lat);
+                // --------------
             }
 
         } else if (qName.equals("way")) {
@@ -97,11 +100,8 @@ public class MapDBHandler extends DefaultHandler {
 
             // Added by Jason
             node.setMyName(attributes.getValue("v"));
-            //prefixTree.insert(attributes.getValue("v"));
-            //System.out.println("Node: " + node.getMyName() + " ID: " + node.getMyID() + " Lat: " + node.getMyLat() + " Lon: " + node.getMyLon());
             prefixTree.insert(attributes.getValue("v"), node);
             node = new Node();
-
             // --------------
 
                 //System.out.println("Node with name: " + attributes.getValue("v"));

@@ -106,10 +106,7 @@ public class Trie {
         TrieNode point = root;
 
         for (int i = 0; i < prefixList.length; i++) {
-
-            //if (point.children.containsKey(prefixList[i])) {
-                point = point.children.get(prefixList[i]);
-            //}
+            point = point.children.get(prefixList[i]);
         }
 
         wordsHelper(point);
@@ -117,8 +114,6 @@ public class Trie {
     }
 
     ArrayList<Node> nodesFinderTraversal(String prefix) {
-        // System.out.println(node);
-
         char[] prefixList = prefix.toCharArray();
 
         TrieNode point = root;
@@ -127,19 +122,13 @@ public class Trie {
 
             if (point.children.containsKey(prefixList[i])) {
                 point = point.children.get(prefixList[i]);
-            } else {
-                System.out.println("No children for: " + prefixList[i]);
             }
         }
 
-
         return point.nodes;
-
     }
 
     ArrayList<String> displayFoundWords() {
-
         return words;
-
     }
 }

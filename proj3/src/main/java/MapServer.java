@@ -365,8 +365,6 @@ public class MapServer {
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
      * cleaned <code>prefix</code>.
      */
-    //public static List<String> getLocationsByPrefix(String prefix)
-    // {return new LinkedList<>();}
     public static List<String> getLocationsByPrefix(String prefix) {
 
         prefix = prefix.replaceAll("[^a-zA-Z ]", "").toLowerCase();
