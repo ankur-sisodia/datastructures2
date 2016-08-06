@@ -20,7 +20,7 @@ public class Trie {
     }
 
     // Inserts a word into the trie.
-    public void insert(String word) {
+    public void insert(String word, Node node) {
         HashMap<Character, TrieNode> children = root.children;
 
         String origWord = word;
@@ -49,6 +49,7 @@ public class Trie {
             if (i == word.length() - 1) {
                 t.isLeaf = true;
                 t.name = origWord;
+                t.nodes.add(node);
             }
         }
     }
@@ -112,6 +113,27 @@ public class Trie {
         }
 
         wordsHelper(point);
+
+    }
+
+    ArrayList<Node> nodesFinderTraversal(String prefix) {
+        // System.out.println(node);
+
+        char[] prefixList = prefix.toCharArray();
+
+        TrieNode point = root;
+
+        for (int i = 0; i < prefixList.length; i++) {
+
+            if (point.children.containsKey(prefixList[i])) {
+                point = point.children.get(prefixList[i]);
+            } else {
+                System.out.println("No children for: " + prefixList[i]);
+            }
+        }
+
+
+        return point.nodes;
 
     }
 

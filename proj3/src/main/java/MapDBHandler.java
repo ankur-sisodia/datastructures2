@@ -96,19 +96,10 @@ public class MapDBHandler extends DefaultHandler {
                     .equals("name")) {
 
             // Added by Jason
-            String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
-            prefixTree.insert(attributes.getValue("v"));
-
             node.setMyName(attributes.getValue("v"));
-
-            HashMap<String, Object> locationMap = new HashMap<>();
-
-            locationMap.put("lat", node.getMyLat());
-            locationMap.put("lon", node.getMyLon());
-            locationMap.put("name", node.getMyName());
-            locationMap.put("id", Long.parseLong(node.getMyID()));
-
-            prefixList.add(locationMap);
+            //prefixTree.insert(attributes.getValue("v"));
+            //System.out.println("Node: " + node.getMyName() + " ID: " + node.getMyID() + " Lat: " + node.getMyLat() + " Lon: " + node.getMyLon());
+            prefixTree.insert(attributes.getValue("v"), node);
 
             // --------------
 

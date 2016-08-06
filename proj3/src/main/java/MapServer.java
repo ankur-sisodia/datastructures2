@@ -398,11 +398,20 @@ public class MapServer {
 
         LinkedList<Map<String, Object>> locationList = new LinkedList<>();
 
-        for (int i = 0; i < MapDBHandler.prefixList.size(); i++) {
-            String mapName = MapDBHandler.prefixList.get(i).get("name").toString();
-            mapName = mapName.replaceAll("[^a-zA-Z ]", "").toLowerCase();
-            if (mapName.equals(locationName)) {
-                locationList.add(MapDBHandler.prefixList.get(i));
+        ArrayList<Node> nodeList;
+
+        if (MapDBHandler.prefixTree.startsWith(locationName)) {
+            TrieNode node = MapDBHandler.prefixTree.searchNode(locationName);
+            nodeList = MapDBHandler.prefixTree.nodesFinderTraversal(locationName);
+
+            for (int i = 0; i < nodeList.size(); i++) {
+                HashMap<String, Object> mapList = new HashMap<>();
+                mapList.put("lat", nodeList.get(i).getMyLat());
+                mapList.put("lon", nodeList.get(i).getMyLon());
+                mapList.put("name", nodeList.get(i).getMyName());
+                mapList.put("id", Long.parseLong(nodeList.get(i).getMyID()));
+
+                locationList.add(mapList);
             }
         }
         return locationList;
