@@ -77,7 +77,7 @@ public class MapServer {
      **/
     public static void initialize() {
         g = new GraphDB(OSM_DB_PATH);
-        System.out.println("size of hash map: " + g.adjHashMap.size());
+        System.out.println("size of hash map: " + g.getAdjHashMap().size());
         // ANKUR ADD
 
         qTree = new QuadTree();

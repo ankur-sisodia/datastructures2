@@ -15,8 +15,13 @@ import java.util.*;
  * @author Alan Yao
  */
 public class GraphDB {
+
     private HashMap<String, ArrayList<String>> adjHashMap;
     private HashMap<String, Node> nodeList;
+
+    public HashMap<String, ArrayList<String>> getAdjHashMap() {
+        return adjHashMap;
+    }
 
     public void addNodeToGraph(String id, double lon, double lat) {
         adjHashMap.put(id, new ArrayList<>());

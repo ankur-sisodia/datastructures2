@@ -76,7 +76,7 @@ public class MapDBHandler extends DefaultHandler {
 
         if (qName.equals("node")) {
             activeState = "node";
-            if (!g.adjHashMap.containsKey(attributes.getValue("id"))) {
+            if (!g.getAdjHashMap().containsKey(attributes.getValue("id"))) {
                 String id = attributes.getValue("id");
                 double lon = Double.valueOf(attributes.getValue("lon"));
                 double lat = Double.valueOf(attributes.getValue("lat"));
@@ -136,8 +136,8 @@ public class MapDBHandler extends DefaultHandler {
         if (qName.equals("way")) {
             if (activeWAY_ALLOWED) {
                 for (int i = 0; i < activeWAY_NODES.size() - 1; i++) {
-                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
-                    g.adjHashMap.get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
+                    g.getAdjHashMap().get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
+                    g.getAdjHashMap().get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
                 }
             }
             // System.out.println("Finishing a way...");
