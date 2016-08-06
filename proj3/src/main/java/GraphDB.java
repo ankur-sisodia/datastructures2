@@ -65,8 +65,8 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        HashMap<String, Node> tempHashMapNodeList = new HashMap<String, Node>();
-        HashMap<String, ArrayList<Node>> tempHashMapAdjList = new HashMap<String, ArrayList<Node>>();
+        HashMap<String, Node> tempHashMapNodeList = new HashMap<>();
+        HashMap<String, ArrayList<Node>> tempHashMapAdjList = new HashMap<>();
 
         for (String k : adjHashMap.keySet()) {
             if (adjHashMap.get(k).size() != 0) {
@@ -81,22 +81,25 @@ public class GraphDB {
     public static ArrayList<Long> shortestPath(String startVertex, String endVertex) {
         //your code here...
 //      Maintain a mapping, from vertices to their distance from the start vertex
-        HashMap<String, Double> pathDistances = new HashMap<String, Double>();
-        HashSet<String> visited = new HashSet<String>();
-        HashMap<String, String> fullPath = new HashMap<String, String>();
-        ArrayList<Long> path = new ArrayList<Long>();
+        HashMap<String, Double> pathDistances = new HashMap<>();
+        HashSet<String> visited = new HashSet<>();
+        HashMap<String, String> fullPath = new HashMap<>();
+        ArrayList<Long> path = new ArrayList<>();
 
 
-//      Add the start vertex to the fringe (a queue ordered on the distance mapping) with distance zero.
-        PriorityQueue<String> fringe = new PriorityQueue<String>(10, new Comparator<String>() {
+        PriorityQueue<String> fringe = new PriorityQueue<>(10, new Comparator<String>() {
             @Override
             public int compare(String o1, String o2) {
-                if(pathDistances.get(o1) + nodeList.get(o1).EuclidianDistance(nodeList.get(endVertex))
-                        < pathDistances.get(o2) + nodeList.get(o2).EuclidianDistance(nodeList.get(endVertex))) {
+                if (pathDistances.get(o1)
+                        + nodeList.get(o1).euclidianDistance(nodeList.get(endVertex))
+                        < pathDistances.get(o2)
+                        + nodeList.get(o2).euclidianDistance(nodeList.get(endVertex))) {
                     return -1;
                 }
-                if(pathDistances.get(o1) + nodeList.get(o1).EuclidianDistance(nodeList.get(endVertex))
-                        > pathDistances.get(o2) + nodeList.get(o2).EuclidianDistance(nodeList.get(endVertex))) {
+                if (pathDistances.get(o1)
+                        + nodeList.get(o1).euclidianDistance(nodeList.get(endVertex))
+                        > pathDistances.get(o2)
+                        + nodeList.get(o2).euclidianDistance(nodeList.get(endVertex))) {
                     return 1;
                 }
                 return 0;
@@ -107,8 +110,6 @@ public class GraphDB {
 
         pathDistances.put(startVertex, 0.0);
         fringe.add(startVertex);
-//      All other nodes can be left out of the fringe. If a node is not in the fringe, assume it has distance infinity.
-//        For each vertex, keep track of which other node is the predecessor for the node along the shortest path found.
 
         while (!fringe.isEmpty()) {
             String v = fringe.poll();
@@ -130,17 +131,17 @@ public class GraphDB {
                 }
                 if (!fringe.contains(w)) {
                     double distance = pathDistances.get(v);
-                    distance += (double) nodeList.get(v).EuclidianDistance(nodeList.get(w));
+                    distance += (double) nodeList.get(v).euclidianDistance(nodeList.get(w));
                     pathDistances.put(w, distance);
                     fringe.add(w);
-                    fullPath.put(w,v);
+                    fullPath.put(w, v);
                 } else {
                     double pred = pathDistances.get(w);
                     double distance = pathDistances.get(v);
-                    distance += (double) nodeList.get(v).EuclidianDistance(nodeList.get(w));
+                    distance += (double) nodeList.get(v).euclidianDistance(nodeList.get(w));
                     if (distance < pred) {
                         pathDistances.put(w, distance);
-                        fullPath.put(w,v);
+                        fullPath.put(w, v);
                     } else {
                         continue;
                     }
@@ -158,19 +159,22 @@ public class GraphDB {
     }
 
 
-    public static String[] closestNode(double start_lon, double start_lat, double end_lon, double end_lat) {
+    public static String[] closestNode(double startLon, double startLat,
+                                       double endLon, double endLat) {
         //your code here...
         String[] closeNode = new String[2];
-        Node startExact = new Node("", start_lon, start_lat);
-        Node endExact = new Node("", end_lon, end_lat);
+        Node startExact = new Node("", startLon, startLat);
+        Node endExact = new Node("", endLon, endLat);
 
         closeNode[0] = nodeList.keySet().iterator().next();
         closeNode[1] = nodeList.keySet().iterator().next();
         for(String s: nodeList.keySet()) {
-            if(nodeList.get(s).EuclidianDistance(startExact) < nodeList.get(closeNode[0]).EuclidianDistance(startExact)) {
+            if (nodeList.get(s).euclidianDistance(startExact)
+                    < nodeList.get(closeNode[0]).euclidianDistance(startExact)) {
                 closeNode[0] = s;
             }
-            if(nodeList.get(s).EuclidianDistance(endExact) < nodeList.get(closeNode[1]).EuclidianDistance(endExact)) {
+            if (nodeList.get(s).euclidianDistance(endExact)
+                    < nodeList.get(closeNode[1]).euclidianDistance(endExact)) {
                 closeNode[1] = s;
             }
         }

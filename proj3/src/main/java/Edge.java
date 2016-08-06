@@ -10,17 +10,13 @@ public class Edge {
     public Edge(String f, String t) {
         from = f;
         to = t;
-        myDistance = Math.sqrt(Math.pow(GraphDB.getNodeList().get(f).getMyLon() + GraphDB.getNodeList().get(t).getMyLon(), 2)
-                + Math.pow(GraphDB.getNodeList().get(f).getMyLat() + GraphDB.getNodeList().get(t).getMyLat(), 2));
-       // System.out.println("mydistance: " + myDistance);
-                //(GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat) * (GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat));
-
-//        myDistance = (long) Math.hypot(GraphDB.nodeList.get(f).myLon - GraphDB.nodeList.get(t).myLon,
-//                GraphDB.nodeList.get(f).myLat - GraphDB.nodeList.get(t).myLat);
-        //myDistance = f.EuclidianDistance(t);
+        myDistance = Math.sqrt(Math.pow(GraphDB.getNodeList().get(f).getMyLon() +
+                GraphDB.getNodeList().get(t).getMyLon(), 2)
+                + Math.pow(GraphDB.getNodeList().get(f).getMyLat() +
+                GraphDB.getNodeList().get(t).getMyLat(), 2));
     }
 
-    public void setDistance(double dist){
+    public void setDistance(double dist) {
         myDistance = dist;
     }
 
