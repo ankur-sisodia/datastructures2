@@ -3,6 +3,9 @@
  */
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.Stack;
 
 public class Trie {
 
@@ -17,7 +20,7 @@ public class Trie {
     }
 
     // Inserts a word into the trie.
-    public void insert(String word, Node node) {
+    public void insert(String word) {
         HashMap<Character, TrieNode> children = root.children;
 
         String origWord = word;
@@ -46,7 +49,6 @@ public class Trie {
             if (i == word.length() - 1) {
                 t.isLeaf = true;
                 t.name = origWord;
-                t.nodes.add(node);
             }
         }
     }
@@ -54,7 +56,11 @@ public class Trie {
     // Returns if there is any word in the trie
     // that starts with the given prefix.
     public boolean startsWith(String prefix) {
-        return (searchNode(prefix) == null) ? false : true;
+        if (searchNode(prefix) == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public TrieNode searchNode(String str) {
@@ -77,51 +83,74 @@ public class Trie {
         return t;
     }
 
-    void wordsHelper(TrieNode node) {
-
-        if (node.isLeaf) {
-            words.add(node.name);
-        }
-
-        if (node.children.size() > 0) {
-            for (char n : node.children.keySet()) {
-                wordsHelper(node.children.get(n));
-            }
-        }
-
-    }
-
-    void wordsFinderTraversal(String prefix) {
+    void wordsFinderTraversal(TrieNode node) {
         // System.out.println(node);
 
-        char[] prefixList = prefix.toCharArray();
+        if (node.isLeaf) {
+            // System.out.println("leaf node found");
 
-        TrieNode point = root;
+//            TrieNode currWrd = node;
+//
+//            Stack<String> prefixStack = new Stack<>();
+//
+//            while (currWrd != prefixRoot) {
+//                prefixStack.push(Character.toString(currWrd.c));
+//                currWrd = currWrd.parent;
+//            }
+//
+//            String wrd = currPrefix;
+//
+//            while (!prefixStack.empty()) {
+//                wrd = wrd + prefixStack.pop();
+//            }
+//
+//            System.out.println(node.name);
+            words.add(node.name);
 
-        for (int i = 0; i < prefixList.length; i++) {
-            point = point.children.get(prefixList[i]);
         }
 
-        wordsHelper(point);
+        Set<Character> childKeys = node.children.keySet();
+        // System.out.println(node.c); System.out.println(node.isLeaf);System.out.println(kset);
+        Iterator<Character> iter = childKeys.iterator();
+        ArrayList<Character> prefixList = new ArrayList<>();
 
-    }
-
-    ArrayList<Node> nodesFinderTraversal(String prefix) {
-        char[] prefixList = prefix.toCharArray();
-
-        TrieNode point = root;
-
-        for (int i = 0; i < prefixList.length; i++) {
-
-            if (point.children.containsKey(prefixList[i])) {
-                point = point.children.get(prefixList[i]);
-            }
+        while (iter.hasNext()) {
+            Character ch = iter.next();
+            prefixList.add(ch);
+            // System.out.println(ch);
         }
 
-        return point.nodes;
+        for (int i = 0; i < prefixList.size(); i++) {
+            wordsFinderTraversal(node.children.get(prefixList.get(i)));
+        }
+
     }
 
     ArrayList<String> displayFoundWords() {
+
+//        for (String e : words) {
+//            System.out.println(e);
+//        }
+
         return words;
+
     }
+
+//    public static void main(String[] args) {
+//        Trie prefixTree;
+//
+//        prefixTree = new Trie();
+//
+//        prefixTree.insert("Sushi California");
+//        prefixTree.insert("Sushi Sho");
+//        prefixTree.insert("Sushi Secrets");
+//        prefixTree.insert("Sushi Solano");
+//        prefixTree.insert("Sushi Ko");
+//
+//        if (prefixTree.startsWith("Sushi")) {
+//            TrieNode node = prefixTree.searchNode("Sushi");
+//            prefixTree.wordsFinderTraversal(node);
+//            prefixTree.displayFoundWords();
+//        }
+//    }
 }

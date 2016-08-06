@@ -1,34 +1,13 @@
+import java.util.HashMap;
+
 /**
  * Created by asisodia on 8/4/2016.
  */
 public class Node {
-
     //private variables
     private String myID;
-    private double myLon;
-    private double myLat;
-    private String myName;
-
-    // Added by Jason
-    public void setMyID(String myID) {
-        this.myID = myID;
-    }
-
-    public String getMyName() {
-        return myName;
-    }
-
-    public void setMyName(String myName) {
-        this.myName = myName;
-    }
-
-    public void setMyLon(double myLon) {
-        this.myLon = myLon;
-    }
-
-    public void setMyLat(double myLat) {
-        this.myLat = myLat;
-    }
+    private double myLon, myLat;
+    private double myHeuristic;
 
     public String getMyID() {
         return myID;
@@ -41,19 +20,21 @@ public class Node {
     public double getMyLat() {
         return myLat;
     }
-    // --------------
+
+    public double getMyHeuristic() {
+        return myHeuristic;
+    }
 
     public Node() {
-
     }
 
     public Node(String id, double lon, double lat) {
-        myID = id;
-        myLon = lon;
-        myLat = lat;
-    }
+            myID = id;
+            myLon = lon;
+            myLat = lat;
+        }
 
-    public double findDistance(Node n2) {
-        return Math.hypot(n2.myLon - this.myLon, n2.myLat - this.myLat);
+        public double EuclidianDistance(Node n2) {
+            return (double) Math.hypot(n2.myLon-this.myLon, n2.myLat-this.myLat);
+        }
     }
-}

@@ -10,11 +10,13 @@ import java.util.List;
 
 /* Maven is used to pull in these dependencies. */
 import com.google.gson.Gson;
+import com.sun.org.apache.xpath.internal.SourceTree;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.MemoryCacheImageOutputStream;
+import javax.sound.midi.Soundbank;
 
 import static spark.Spark.*;
 
@@ -56,7 +58,7 @@ public class MapServer {
      * w -> user viewport window width in pixels,<br> h -> user viewport height in pixels.
      **/
     private static final String[] REQUIRED_RASTER_REQUEST_PARAMS = {"ullat", "ullon",
-        "lrlat", "lrlon", "w", "h"};
+            "lrlat", "lrlon", "w", "h"};
     /**
      * Each route request to the server will have the following parameters
      * as keys in the params map.<br>
@@ -64,7 +66,7 @@ public class MapServer {
      * end_lat -> end point latitude, <br>end_lon -> end point longitude.
      **/
     private static final String[] REQUIRED_ROUTE_REQUEST_PARAMS = {"start_lat", "start_lon",
-        "end_lat", "end_lon"};
+            "end_lat", "end_lon"};
     /* Define any static variables here. Do not define any instance variables of MapServer. */
     private static GraphDB g;
     private static QuadTree qTree;
@@ -76,10 +78,8 @@ public class MapServer {
      * This is for testing purposes, and you may fail tests otherwise.
      **/
     public static void initialize() {
-        g = new GraphDB(OSM_DB_PATH);
-        System.out.println("size of hash map: " + g.getAdjHashMap().size());
-        // ANKUR ADD
-
+         g = new GraphDB(OSM_DB_PATH);
+         System.out.println("size of hash map: " + g.adjHashMap.size());
         qTree = new QuadTree();
         storedImages = new HashMap();
     }
@@ -111,6 +111,7 @@ public class MapServer {
                     getRequestParams(req, REQUIRED_ROUTE_REQUEST_PARAMS);
             /* If we do, draw the route too. */
             if (hasRequestParameters(routeParams, REQUIRED_ROUTE_REQUEST_PARAMS)) {
+                System.out.println("check");
                 findAndDrawRoute(routeParams, rasteredImgParams, im);
             }
             /* On an image query success, add the image data to the response */
@@ -355,7 +356,52 @@ public class MapServer {
     public static List<Long> findAndDrawRoute(Map<String, Double> routeParams,
                                               Map<String, Object> rasterImageParams,
                                               BufferedImage im) {
-        return new ArrayList<>();
+        // find start node, end node
+        double start_lon = routeParams.get("start_lon");
+        double start_lat = routeParams.get("start_lat");
+        double end_lon = routeParams.get("end_lon");
+        double end_lat = routeParams.get("end_lat");
+        String[] startendVertex = new String[2];
+        startendVertex = GraphDB.closestNode(start_lon,start_lat,end_lon,end_lat);
+        ArrayList<Long> shortPath = GraphDB.shortestPath(startendVertex[0], startendVertex[1]);
+        ArrayList<Long> copy = shortPath;
+        // create a heuristic map
+
+        if (!(im == null)) {
+            Graphics2D a = im.createGraphics();
+            Stroke s = new BasicStroke(MapServer.ROUTE_STROKE_WIDTH_PX,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+            a.setColor(ROUTE_STROKE_COLOR);
+            int prevX = getXPixel(GraphDB.nodeList.get(String.valueOf(startendVertex[0])).getMyLon(), rasterImageParams);
+            int prevY = getYPixel(GraphDB.nodeList.get(String.valueOf(startendVertex[0])).getMyLat(), rasterImageParams);
+            for (Long id : copy) {
+                a.setStroke(s);
+                im.getGraphics();
+                int x2 = getXPixel(GraphDB.nodeList.get(String.valueOf(id)).getMyLon(), rasterImageParams);
+                int y2 = getYPixel(GraphDB.nodeList.get(String.valueOf(id)).getMyLat(), rasterImageParams);
+                a.drawLine(prevX,prevY,x2,y2);
+                prevX = x2;
+                prevY = y2;
+
+            }
+        }
+        return shortPath;
+    }
+
+    public static int getXPixel(double node_lon, Map<String, Object> raster) {
+        double xPixel;
+        int wid = (int) raster.get("raster_width");
+
+        xPixel = (double)wid*((double) raster.get("raster_ul_lon") - node_lon) /
+                ((double) raster.get("raster_ul_lon") - (double) raster.get("raster_lr_lon"));
+        return (int) xPixel;
+    }
+
+    public static int getYPixel(double node_lat, Map<String, Object> raster) {
+        double yPixel;
+        int hei = (int) raster.get("raster_height");
+        yPixel = (double)hei *((double) raster.get("raster_ul_lat") - node_lat) /
+                ((double) raster.get("raster_ul_lat") - (double) raster.get("raster_lr_lat"));
+        return (int) yPixel;
     }
 
     /**
@@ -365,14 +411,16 @@ public class MapServer {
      * @return A <code>List</code> of the full names of locations whose cleaned name matches the
      * cleaned <code>prefix</code>.
      */
+    //public static List<String> getLocationsByPrefix(String prefix)
+    // {return new LinkedList<>();}
     public static List<String> getLocationsByPrefix(String prefix) {
 
         prefix = prefix.replaceAll("[^a-zA-Z ]", "").toLowerCase();
 
-        if (MapDBHandler.getPrefixTree().startsWith(prefix)) {
-            TrieNode node = MapDBHandler.getPrefixTree().searchNode(prefix);
-            MapDBHandler.getPrefixTree().wordsFinderTraversal(prefix);
-            return MapDBHandler.getPrefixTree().displayFoundWords();
+        if (MapDBHandler.prefixTree.startsWith(prefix)) {
+            TrieNode node = MapDBHandler.prefixTree.searchNode(prefix);
+            MapDBHandler.prefixTree.wordsFinderTraversal(node);
+            return MapDBHandler.prefixTree.displayFoundWords();
         }
         return new ArrayList<>();
     }
@@ -391,27 +439,6 @@ public class MapServer {
      * "id" -> Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-
-        locationName = locationName.replaceAll("[^a-zA-Z ]", "").toLowerCase();
-
-        LinkedList<Map<String, Object>> locationList = new LinkedList<>();
-
-        ArrayList<Node> nodeList;
-
-        if (MapDBHandler.getPrefixTree().startsWith(locationName)) {
-            TrieNode node = MapDBHandler.getPrefixTree().searchNode(locationName);
-            nodeList = MapDBHandler.getPrefixTree().nodesFinderTraversal(locationName);
-
-            for (int i = 0; i < nodeList.size(); i++) {
-                HashMap<String, Object> mapList = new HashMap<>();
-                mapList.put("lat", nodeList.get(i).getMyLat());
-                mapList.put("lon", nodeList.get(i).getMyLon());
-                mapList.put("name", nodeList.get(i).getMyName());
-                mapList.put("id", Long.parseLong(nodeList.get(i).getMyID()));
-
-                locationList.add(mapList);
-            }
-        }
-        return locationList;
+        return new LinkedList<>();
     }
 }

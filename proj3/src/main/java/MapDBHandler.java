@@ -2,7 +2,10 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.ArrayList;
 
 
 /**
@@ -29,30 +32,16 @@ public class MapDBHandler extends DefaultHandler {
                     "secondary_link", "tertiary_link"));
     private String activeState = "";
     private boolean activeWAY_ALLOWED;
-    private ArrayList<String> activeWAY_NODES = new ArrayList<>();
-
+    private ArrayList<String> activeWAY_NODES = new ArrayList<String>();
     private final GraphDB g;
-
-    // Added by Jason
-    private static Trie prefixTree;
-
-    public static Trie getPrefixTree() {
-        return prefixTree;
-    }
-
-    public static void setPrefixTree(Trie prefixTree) {
-        MapDBHandler.prefixTree = prefixTree;
-    }
-
-    Node node = new Node();
-    // --------------
+    public static Trie prefixTree;
+    private HashSet<String> wordSet;
 
 
     public MapDBHandler(GraphDB g) {
         this.g = g;
-        // Added by Jason
         prefixTree = new Trie();
-        // --------------
+        wordSet = new HashSet<>();
     }
 
     /**
@@ -76,7 +65,7 @@ public class MapDBHandler extends DefaultHandler {
 
         if (qName.equals("node")) {
             activeState = "node";
-            if (!g.getAdjHashMap().containsKey(attributes.getValue("id"))) {
+            if (!g.adjHashMap.containsKey(attributes.getValue("id"))) {
                 String id = attributes.getValue("id");
                 double lon = Double.valueOf(attributes.getValue("lon"));
                 double lat = Double.valueOf(attributes.getValue("lat"));
@@ -84,35 +73,31 @@ public class MapDBHandler extends DefaultHandler {
                 g.addNodeToGraph(id, lon, lat);
                 // check to see in my graph
                 // if not add to graph
-
-                // Added by Jason
-                node.setMyID(id);
-                node.setMyLon(lon);
-                node.setMyLat(lat);
-                // --------------
             }
-
         } else if (qName.equals("way")) {
             activeState = "way";
             //System.out.println("Beginning a way...");
-
         } else if (activeState.equals("way") && qName.equals("tag")) {
-            String k = attributes.getValue("k");
-            String v = attributes.getValue("v");
-            if (k.equals("highway")) {
-                if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
-                    activeWAY_ALLOWED = true;
+                String k = attributes.getValue("k");
+                String v = attributes.getValue("v");
+                if (k.equals("highway")) {
+                    if (ALLOWED_HIGHWAY_TYPES.contains(v)) {
+                        activeWAY_ALLOWED = true;
+                    }
                 }
-            }
+               // System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                     .equals("name")) {
-
             // Added by Jason
-            node.setMyName(attributes.getValue("v"));
-            prefixTree.insert(attributes.getValue("v"), node);
-            node = new Node();
-            // --------------
+            String cleanWord = attributes.getValue("v");
+            prefixTree.insert(cleanWord);
 
+//
+//            //System.out.println("C2: " + cleanWord);
+//            if (!wordSet.contains(cleanWord)) {
+//                prefixTree.insert(cleanWord);
+//                wordSet.add(cleanWord);
+//            }
                 //System.out.println("Node with name: " + attributes.getValue("v"));
         } else if (qName.equals("nd")) {
             String ref = attributes.getValue("ref");
@@ -134,10 +119,12 @@ public class MapDBHandler extends DefaultHandler {
     @Override
     public void endElement(String uri, String localName, String qName) throws SAXException {
         if (qName.equals("way")) {
-            if (activeWAY_ALLOWED) {
-                for (int i = 0; i < activeWAY_NODES.size() - 1; i++) {
-                    g.getAdjHashMap().get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
-                    g.getAdjHashMap().get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
+            if (activeWAY_ALLOWED == true) {
+                for(int i = 0; i < activeWAY_NODES.size()-1; i++){
+                    g.adjHashMap.get(activeWAY_NODES.get(i)).add(GraphDB.nodeList.get(activeWAY_NODES.get(i+1)));
+                    g.adjHashMap.get(activeWAY_NODES.get(i+1)).add(GraphDB.nodeList.get(activeWAY_NODES.get(i)));
+                    //g.adjHashMap.get(activeWAY_NODES.get(i)).add(new Edge(activeWAY_NODES.get(i), activeWAY_NODES.get(i+1)));
+                    //g.adjHashMap.get(activeWAY_NODES.get(i+1)).add(new Edge(activeWAY_NODES.get(i+1), activeWAY_NODES.get(i)));
                 }
             }
             // System.out.println("Finishing a way...");

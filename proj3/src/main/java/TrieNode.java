@@ -1,21 +1,17 @@
-import java.util.*;
+import java.util.HashMap;
 
 public class TrieNode {
     char c;
     TrieNode parent;
-    HashMap<Character, TrieNode> children;
+    HashMap<Character, TrieNode> children = new HashMap<Character, TrieNode>();
     boolean isLeaf;
     String name;
-    ArrayList<Node> nodes;
 
     public TrieNode() {
-        nodes = new ArrayList<>();
-        children = new HashMap<>();
+
     }
 
     public TrieNode(char c) {
         this.c = c;
-        nodes = new ArrayList<>();
-        children = new HashMap<>();
     }
 }
