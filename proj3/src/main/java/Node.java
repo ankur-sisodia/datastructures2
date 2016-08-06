@@ -59,7 +59,8 @@ public class Node {
     }
 
     public double EuclidianDistance(Node n2) {
-        return (double) hypot(n2.myLon - this.myLon, n2.myLat - this.myLat);
+        return (double) Math.sqrt((n2.myLon - this.myLon)*(n2.myLon - this.myLon) + (n2.myLat - this.myLat)*(n2.myLat - this.myLat));
+        //return (double) hypot(n2.myLon - this.myLon, n2.myLat - this.myLat);
     }
 
     public static double hypot(double x, double y) {
