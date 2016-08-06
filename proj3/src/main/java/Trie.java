@@ -23,6 +23,9 @@ public class Trie {
     public void insert(String word) {
         HashMap<Character, TrieNode> children = root.children;
 
+        String origWord = word;
+        word = word.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+
         TrieNode currParent;
 
         currParent = root;
@@ -43,8 +46,10 @@ public class Trie {
             currParent = t;
 
             // set leaf node
-            if (i == word.length() - 1)
+            if (i == word.length() - 1) {
                 t.isLeaf = true;
+                t.name = origWord;
+            }
         }
     }
 
@@ -78,74 +83,41 @@ public class Trie {
         return t;
     }
 
-    void wordsFinderTraversal(TrieNode node) {
-        // System.out.println(node);
+    void wordsHelper(TrieNode node) {
 
         if (node.isLeaf) {
-            // System.out.println("leaf node found");
+            words.add(node.name);
+        }
 
-            TrieNode currWrd = node;
-
-            Stack<String> prefixStack = new Stack<>();
-
-            while (currWrd != prefixRoot) {
-                prefixStack.push(Character.toString(currWrd.c));
-                currWrd = currWrd.parent;
+        if (node.children.size() > 0) {
+            for (char n : node.children.keySet()) {
+                wordsHelper(node.children.get(n));
             }
-
-            String wrd = currPrefix;
-
-            while (!prefixStack.empty()) {
-                wrd = wrd + prefixStack.pop();
-            }
-
-            // System.out.println(wrd);
-            words.add(wrd);
-
         }
 
-        Set<Character> childKeys = node.children.keySet();
-        // System.out.println(node.c); System.out.println(node.isLeaf);System.out.println(kset);
-        Iterator<Character> iter = childKeys.iterator();
-        ArrayList<Character> prefixList = new ArrayList<>();
+    }
 
-        while (iter.hasNext()) {
-            Character ch = iter.next();
-            prefixList.add(ch);
-            // System.out.println(ch);
+    void wordsFinderTraversal(String prefix) {
+        // System.out.println(node);
+
+        char[] prefixList = prefix.toCharArray();
+
+        TrieNode point = root;
+
+        for (int i = 0; i < prefixList.length; i++) {
+
+            //if (point.children.containsKey(prefixList[i])) {
+                point = point.children.get(prefixList[i]);
+            //}
         }
 
-        for (int i = 0; i < prefixList.size(); i++) {
-            wordsFinderTraversal(node.children.get(prefixList.get(i)));
-        }
+        wordsHelper(point);
 
     }
 
     ArrayList<String> displayFoundWords() {
 
-//        for (String e : words) {
-//            System.out.println(e);
-//        }
-
         return words;
 
     }
-
-//    public static void main(String[] args) {
-//        Trie prefixTree;
-//
-//        prefixTree = new Trie();
-//
-//        prefixTree.insert("Sushi California");
-//        prefixTree.insert("Sushi Sho");
-//        prefixTree.insert("Sushi Secrets");
-//        prefixTree.insert("Sushi Solano");
-//        prefixTree.insert("Sushi Ko");
-//
-//        if (prefixTree.startsWith("Sushi")) {
-//            TrieNode node = prefixTree.searchNode("Sushi");
-//            prefixTree.wordsFinderTraversal(node);
-//            prefixTree.displayFoundWords();
-//        }
-//    }
 }

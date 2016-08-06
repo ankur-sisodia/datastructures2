@@ -375,7 +375,7 @@ public class MapServer {
 
         if (MapDBHandler.prefixTree.startsWith(prefix)) {
             TrieNode node = MapDBHandler.prefixTree.searchNode(prefix);
-            MapDBHandler.prefixTree.wordsFinderTraversal(node);
+            MapDBHandler.prefixTree.wordsFinderTraversal(prefix);
             return MapDBHandler.prefixTree.displayFoundWords();
         }
         return new ArrayList<>();
@@ -395,6 +395,18 @@ public class MapServer {
      * "id" -> Number, The id of the node. <br>
      */
     public static List<Map<String, Object>> getLocations(String locationName) {
-        return new LinkedList<>();
+
+        locationName = locationName.replaceAll("[^a-zA-Z ]", "").toLowerCase();
+
+        ArrayList<Map<String, Object>> locationList = new ArrayList<>();
+
+        if (MapDBHandler.locationMap.containsKey(locationName)) {
+            for (Object o : MapDBHandler.locationMap.keySet()) {
+                if (o.equals(locationName)) {
+                    //locationList.add(o);
+                }
+            }
+        }
+        return locationList;
     }
 }

@@ -5,6 +5,7 @@ public class TrieNode {
     TrieNode parent;
     HashMap<Character, TrieNode> children = new HashMap<Character, TrieNode>();
     boolean isLeaf;
+    String name;
 
     public TrieNode() {
 

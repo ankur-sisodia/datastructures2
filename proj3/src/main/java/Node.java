@@ -5,16 +5,24 @@ import java.util.HashMap;
  */
 public class Node {
     //private variables
-    private String myID;
+    private String myID, myName;
     private float myLon, myLat;
     public Node() {
+
     }
 
     public Node(String id, float lon, float lat) {
             myID = id;
             myLon = lon;
             myLat = lat;
-        }
+    }
+
+    public Node(String id, float lon, float lat, String name) {
+        myID = id;
+        myLon = lon;
+        myLat = lat;
+        myName = name;
+    }
 
         public double findDistance(Node n2) {
             return Math.hypot(n2.myLon-this.myLon, n2.myLat-this.myLat);

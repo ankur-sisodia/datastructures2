@@ -2,10 +2,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 
 /**
@@ -36,13 +33,15 @@ public class MapDBHandler extends DefaultHandler {
 
     private final GraphDB g;
     public static Trie prefixTree;
-    private HashSet<String> wordSet;
+    // Added by Jason
+    public static HashMap<String, Object> locationMap;
 
 
     public MapDBHandler(GraphDB g) {
         this.g = g;
         prefixTree = new Trie();
-        wordSet = new HashSet<>();
+        // Added by Jason
+        locationMap = new HashMap<>();
     }
 
     /**
@@ -75,29 +74,10 @@ public class MapDBHandler extends DefaultHandler {
                 // check to see in my graph
                 // if not add to graph
             }
-            // Added by Jason
-            // Check for name tag, add value to trie
-            if (attributes.getValue("k") == "name") {
-                String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
-                if (!wordSet.contains(cleanWord)) {
-                    prefixTree.insert(cleanWord);
-                    wordSet.add(cleanWord);
-                }
-            }
+
         } else if (qName.equals("way")) {
             activeState = "way";
             //System.out.println("Beginning a way...");
-            // Added by Jason
-            // Check for name tag, add value to trie
-            if (attributes.getValue("k") == "name") {
-                String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
-                if (!wordSet.contains(cleanWord)) {
-                    prefixTree.insert(cleanWord);
-                    wordSet.add(cleanWord);
-                }
-
-            }
-
 
         } else if (activeState.equals("way") && qName.equals("tag")) {
                 String k = attributes.getValue("k");
@@ -110,6 +90,16 @@ public class MapDBHandler extends DefaultHandler {
                // System.out.println("Tag with k=" + k + ", v=" + v + ".");
         } else if (activeState.equals("node") && qName.equals("tag") && attributes.getValue("k")
                     .equals("name")) {
+
+            // Added by Jason
+            String cleanWord = attributes.getValue("v").replaceAll("[^a-zA-Z ]", "").toLowerCase();
+            prefixTree.insert(attributes.getValue("v"));
+
+//            Node locationNode = new Node(attributes.getValue("id"), Float.valueOf(attributes.getValue("lon")), Float.valueOf(attributes.getValue("lat")), attributes.getValue("v"));
+//
+//            locationMap.put(cleanWord, locationNode);
+            // --------------
+
                 //System.out.println("Node with name: " + attributes.getValue("v"));
         } else if (qName.equals("nd")) {
             String ref = attributes.getValue("ref");
