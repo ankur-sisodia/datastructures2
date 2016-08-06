@@ -8,6 +8,11 @@ public class Node {
     private double myLon;
     private double myLat;
     private String myName;
+    private double myHeuristic;
+
+    public double getMyHeuristic() {
+        return myHeuristic;
+    }
 
     // Added by Jason
     public void setMyID(String myID) {
@@ -53,7 +58,7 @@ public class Node {
         myLat = lat;
     }
 
-    public double findDistance(Node n2) {
-        return Math.hypot(n2.myLon - this.myLon, n2.myLat - this.myLat);
+    public double EuclidianDistance(Node n2) {
+        return (double) Math.hypot(n2.myLon - this.myLon, n2.myLat - this.myLat);
     }
 }

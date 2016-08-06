@@ -355,7 +355,52 @@ public class MapServer {
     public static List<Long> findAndDrawRoute(Map<String, Double> routeParams,
                                               Map<String, Object> rasterImageParams,
                                               BufferedImage im) {
-        return new ArrayList<>();
+        // find start node, end node
+        double start_lon = routeParams.get("start_lon");
+        double start_lat = routeParams.get("start_lat");
+        double end_lon = routeParams.get("end_lon");
+        double end_lat = routeParams.get("end_lat");
+        String[] startendVertex = new String[2];
+        startendVertex = GraphDB.closestNode(start_lon,start_lat,end_lon,end_lat);
+        ArrayList<Long> shortPath = GraphDB.shortestPath(startendVertex[0], startendVertex[1]);
+        ArrayList<Long> copy = shortPath;
+        // create a heuristic map
+
+        if (!(im == null)) {
+            Graphics2D a = im.createGraphics();
+            Stroke s = new BasicStroke(MapServer.ROUTE_STROKE_WIDTH_PX,BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+            a.setColor(ROUTE_STROKE_COLOR);
+            int prevX = getXPixel(GraphDB.getNodeList().get(String.valueOf(startendVertex[0])).getMyLon(), rasterImageParams);
+            int prevY = getYPixel(GraphDB.getNodeList().get(String.valueOf(startendVertex[0])).getMyLat(), rasterImageParams);
+            for (Long id : copy) {
+                a.setStroke(s);
+                im.getGraphics();
+                int x2 = getXPixel(GraphDB.getNodeList().get(String.valueOf(id)).getMyLon(), rasterImageParams);
+                int y2 = getYPixel(GraphDB.getNodeList().get(String.valueOf(id)).getMyLat(), rasterImageParams);
+                a.drawLine(prevX,prevY,x2,y2);
+                prevX = x2;
+                prevY = y2;
+
+            }
+        }
+        return shortPath;
+    }
+
+    public static int getXPixel(double node_lon, Map<String, Object> raster) {
+        double xPixel;
+        int wid = (int) raster.get("raster_width");
+
+        xPixel = (double)wid*((double) raster.get("raster_ul_lon") - node_lon) /
+                ((double) raster.get("raster_ul_lon") - (double) raster.get("raster_lr_lon"));
+        return (int) xPixel;
+    }
+
+    public static int getYPixel(double node_lat, Map<String, Object> raster) {
+        double yPixel;
+        int hei = (int) raster.get("raster_height");
+        yPixel = (double)hei *((double) raster.get("raster_ul_lat") - node_lat) /
+                ((double) raster.get("raster_ul_lat") - (double) raster.get("raster_lr_lat"));
+        return (int) yPixel;
     }
 
     /**

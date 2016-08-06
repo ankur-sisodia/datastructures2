@@ -136,8 +136,8 @@ public class MapDBHandler extends DefaultHandler {
         if (qName.equals("way")) {
             if (activeWAY_ALLOWED) {
                 for (int i = 0; i < activeWAY_NODES.size() - 1; i++) {
-                    g.getAdjHashMap().get(activeWAY_NODES.get(i)).add(activeWAY_NODES.get(i + 1));
-                    g.getAdjHashMap().get(activeWAY_NODES.get(i + 1)).add(activeWAY_NODES.get(i));
+                    GraphDB.getAdjHashMap().get(activeWAY_NODES.get(i)).add(GraphDB.getNodeList().get(activeWAY_NODES.get(i+1)));
+                    GraphDB.getAdjHashMap().get(activeWAY_NODES.get(i+1)).add(GraphDB.getNodeList().get(activeWAY_NODES.get(i)));
                 }
             }
             // System.out.println("Finishing a way...");
